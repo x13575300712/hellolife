@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head th:fragment="htmlhead">
+  	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="renderer" content="webkit" />
+    <meta name="description" content=""></meta>
+    <meta name="author" content=""></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"></meta>
+    <link rel="icon" href="/img/icon.ico" type="image/x-icon" />
+   	<title >热爱生活</title>
+   	<link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}" />
+	<!-- Bootstrap 3.3.7 -->
+  	<link rel="stylesheet" th:href="@{/media/css/bootstrap.css}" id="bscss"></link>
+  	<!-- Font Awesome -->
+  	<link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}"></link>
+ 	<!-- Ionicons -->
+  	<link rel="stylesheet" th:href="@{/adminLTE/Ionicons/css/ionicons.min.css}">
+ 	<!-- jvectormap -->
+ 	<link rel="stylesheet" th:href="@{/adminLTE/jvectormap/jquery-jvectormap.css}">
+ 	<!-- Theme style -->
+ 	<link rel="stylesheet" th:href="@{/adminLTE/dist/css/AdminLTE.min.css}">
+ 	<!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
+  	<link rel="stylesheet" th:href="@{/adminLTE/dist/css/skins/_all-skins.min.css}">
+ 	<!-- Google Font -->
+ 	<link rel="stylesheet"href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  </head>
+
+  <body class="layout-fixed">
+    <div th:fragment="navbar"  class="wrapper"  role="navigation">
+		<div th:replace="mainpart/header :: header">Header</div>
+		<div th:replace="mainpart/left :: left">left</div>
+		
+		<div layout:fragment="content" id="content" ></div>
+		
+		<div th:replace="mainpart/footer :: footer">footer</div>
+		<div th:replace="mainpart/sidebar :: sidebar">sidebar</div>
+		<div th:replace="mainpart/sidebar :: sidebarbg">sidebarbg</div>
+    </div>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script th:src="@{/webjars/bootstrap/3.3.6/dist/js/bootstrap.min.js}"></script>
+	<!-- FastClick -->
+	<script th:src="@{/adminLTE/fastclick/lib/fastclick.js}" ></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/adminLTE/dist/js/adminlte.min.js}"></script>
+	<!-- Sparkline -->
+	<script th:src="@{/adminLTE/jquery-sparkline/dist/jquery.sparkline.min.js}"></script>
+	<!-- jvectormap  -->
+	<script th:src="@{/adminLTE/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+	<script th:src="@{/adminLTE/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+	<!-- SlimScroll -->
+	<script th:src="@{/adminLTE/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+	<!-- ChartJS -->
+	<script th:src="@{/adminLTE/chart.js/Chart.js}"></script>
+	<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+	<script th:src="@{/adminLTE/dist/js/pages/dashboard2.js}"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script th:src="@{/adminLTE/dist/js/demo.js}"></script>
+</body>
+</html>
