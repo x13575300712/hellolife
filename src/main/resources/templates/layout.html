@@ -8,36 +8,45 @@
     <meta name="description" content=""></meta>
     <meta name="author" content=""></meta>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"></meta>
-    <link rel="icon" href="/img/icon.ico" type="image/x-icon" />
+    <link rel="icon" href="/static/img/icon.ico" type="image/x-icon" />
    	<title >热爱生活</title>
    	<link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}" />
-	<!-- Bootstrap 3.3.7 -->
-  	<link rel="stylesheet" th:href="@{/media/css/bootstrap.css}" id="bscss"></link>
-  	<!-- Font Awesome -->
-  	<link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}"></link>
- 	<!-- Ionicons -->
-  	<link rel="stylesheet" th:href="@{/adminLTE/Ionicons/css/ionicons.min.css}">
- 	<!-- jvectormap -->
- 	<link rel="stylesheet" th:href="@{/adminLTE/jvectormap/jquery-jvectormap.css}">
- 	<!-- Theme style -->
- 	<link rel="stylesheet" th:href="@{/adminLTE/dist/css/AdminLTE.min.css}">
+	  <!-- Bootstrap 3.3.7 -->
+	  <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.6/dist/css/bootstrap.min.css}" id="bscss"></link>
+	  <!-- Font Awesome -->
+	  <link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}"></link>
+	  <!-- Ionicons -->
+	  <link rel="stylesheet" th:href="@{/adminLTE/Ionicons/css/ionicons.min.css}">
+	  <!-- jvectormap -->
+	  <link rel="stylesheet" th:href="@{/adminLTE/jvectormap/jquery-jvectormap.css}">
+	  <!-- Theme style -->
+	  <link rel="stylesheet" th:href="@{/adminLTE/dist/css/AdminLTE.min.css}">
+	  <!-- boostratable -->
+	  <link rel="stylesheet" th:href="@{/sys/boostratable/bootstrap-table.min.css}">
+	  <!-- contextMenu -->
+	  <link rel="stylesheet"  th:href="@{/sys/css/jquery.contextMenu.min.css}">
+	  <!-- messenger -->
+	  <link th:href="@{/sys/messenger/css/messenger.css}" rel="stylesheet" />
+	  <link th:href="@{/sys/messenger/css/messenger-theme-future.css}" rel="stylesheet" />
+
  	<!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
   	<link rel="stylesheet" th:href="@{/adminLTE/dist/css/skins/_all-skins.min.css}">
  	<!-- Google Font -->
  	<link rel="stylesheet"href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   </head>
 
-  <body class="layout-fixed">
+  <body class="hold-transition skin-blue sidebar-mini">
     <div th:fragment="navbar"  class="wrapper"  role="navigation">
 		<div th:replace="mainpart/header :: header">Header</div>
 		<div th:replace="mainpart/left :: left">left</div>
 		
-		<div layout:fragment="content" id="content" ></div>
+		<div th:replace="mainpart/content :: maincontent" ></div>
 		
 		<div th:replace="mainpart/footer :: footer">footer</div>
 		<div th:replace="mainpart/sidebar :: sidebar">sidebar</div>
 		<div th:replace="mainpart/sidebar :: sidebarbg">sidebarbg</div>
     </div>
+	<div th:replace="mainpart/alert :: alert">alert</div>
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 	<!-- Bootstrap 3.3.6 -->
 	<script th:src="@{/webjars/bootstrap/3.3.6/dist/js/bootstrap.min.js}"></script>
@@ -54,9 +63,32 @@
 	<script th:src="@{/adminLTE/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
 	<!-- ChartJS -->
 	<script th:src="@{/adminLTE/chart.js/Chart.js}"></script>
-	<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-	<script th:src="@{/adminLTE/dist/js/pages/dashboard2.js}"></script>
-	<!-- AdminLTE for demo purposes -->
-	<script th:src="@{/adminLTE/dist/js/demo.js}"></script>
+	<!-- jquery.form -->
+	<script th:src="@{/vendor/jquery.form/jquery.form.min.js}"></script>
+	<!-- boostratable -->
+	<script th:src="@{/sys/boostratable/bootstrap-table.js}"></script>
+	<script th:src="@{/sys/boostratable/locale/bootstrap-table-zh-CN.js}"></script>
+	<!-- contextMenu -->
+	<script th:src="@{/sys/js/jquery.contextMenu.min.js}"></script>
+	<!-- messenger -->
+	<script th:src="@{/sys/messenger/js/messenger.js}"></script>
+	<!-- AdminLTE dashboard demo (This is only for demo purposes) <script th:src="@{/adminLTE/dist/js/pages/dashboard2.js}"></script>-->
+
+	<!-- AdminLTE for demo purposes <script th:src="@{/adminLTE/dist/js/demo.js}"></script>-->
+
+	<script th:src="@{/sys/js/comm.js}"></script>
+	<script th:src="@{/sys/js/formJs.js}"></script>
+	<script th:src="@{/sys/js/tableJs.js}"></script>
+	<script th:src="@{/sys/js/alertJs.js}"></script>
+
+  	<script>
+        $("#modal-pub").on("hide.bs.modal", function() {
+            $(this).removeData("bs.modal");
+        });
+        //初始化messenger位置
+        $._messengerDefaults = {
+			extraClasses: 'messenger-fixed messenger-theme-air messenger-on-top '
+        }
+	</script>
 </body>
 </html>

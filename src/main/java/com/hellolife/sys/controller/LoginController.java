@@ -8,16 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import java.util.Enumeration;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hellolife.sys.enums.ExceptionMsg;
 
 @Controller
 public class LoginController {
 	
 	/**
-	 * 
+	 *
 	 *  登陆
 	 */
 	@RequestMapping(value = {"/","/login"})
@@ -32,12 +31,14 @@ public class LoginController {
 	public String login() {
 		return "home";
 	}
-	@ResponseBody
+
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(HttpServletRequest request,Model model) throws Exception{
 	    // 登录失败从request中获取shiro处理的异常信息。
 	    // shiroLoginFailure:就是shiro异常类的全类名.
 	    String exception = (String) request.getAttribute("shiroLoginFailure");
+	    String username = request.getParameter("username");
+	    String password = request.getParameter("password");
 	    String msg = "";
 	    String rescode = "000000";
 	    if (exception != null) {
@@ -60,10 +61,11 @@ public class LoginController {
 	        }
 	    }
 	    // 此方法不处理登录成功,由shiro进行处理
-	    JSONObject resultJsonObject = new JSONObject();
-	    resultJsonObject.put("errmsg", msg);
-	    resultJsonObject.put("rescode", rescode);
-	    resultJsonObject.put("url", "/home");
-	    return resultJsonObject.toJSONString();
+		model.addAttribute("errmsg", msg);
+		model.addAttribute("rescode", rescode);
+		model.addAttribute("showflg", true);
+		model.addAttribute("username", username);
+		model.addAttribute("password", password);
+	    return "/login";
 	}
 }

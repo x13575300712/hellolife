@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.hellolife.sys.dao.User;
 import com.hellolife.sys.mapper.UserMapper;
 
+import java.util.List;
+
 @Service
 public class UserService {
         @Autowired
@@ -19,5 +21,14 @@ public class UserService {
         }
         public  int genUser(User user) {
         	 return userMapper.genUser(user);
-        } 
+        }
+        public  int updateUser(User user) {
+        	 return userMapper.updateUser(user);
+        }
+        public  int deleteUser(String userCode) {
+        	 return userMapper.deleteUser(userCode);
+        }
+        public  List<User> getAllUser() {
+            return userMapper.getAllUser();
+        }
 }

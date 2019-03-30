@@ -5,7 +5,7 @@
   <meta name="description" content="Bootstrap Admin App + jQuery"/>
   <meta name="keywords" content="app, responsive, jquery, bootstrap, dashboard, admin"/>
   <title>热爱生活</title>
-  <link rel="icon" href="/img/icon.ico" type="image/x-icon" />
+  <link rel="icon" href="/static/img/icon.ico" type="image/x-icon" />
  
   <link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}"></link>
   <link rel="stylesheet" th:href="@{/vendor/simple-line-icons/css/simple-line-icons.css}"></link>
@@ -24,13 +24,13 @@
             </div>
             <div class="panel-body" id="loginPage">
                <p class="text-center pv">请登录</p>
-               <form id="form" data-parsley-validate="true" onsubmit="return false">
+               <form id="form" data-parsley-validate="true" action="/login" method="post">
                   <div class="form-group has-feedback">
-                     <input type="text" placeholder="邮箱地址或登录名称" v-model="username" class="form-control" data-parsley-error-message="请输入邮箱地址或登录名称" required="required" />
+                     <input type="text" placeholder="邮箱地址或登录名称" v-model="username" name="username" th:value="${username}" class="form-control" data-parsley-error-message="请输入邮箱地址或登录名称" required="required" />
                      <span class="fa fa-envelope form-control-feedback text-muted"></span>
                   </div>
                   <div class="form-group has-feedback">
-                     <input type="password" placeholder="密码" v-model="password" class="form-control" data-parsley-error-message="请输入密码" required="required" />
+                     <input type="password" placeholder="密码" v-model="password" name="password" th:value="${password}" class="form-control" data-parsley-error-message="请输入密码" required="required" />
                      <span class="fa fa-lock form-control-feedback text-muted"></span>
                   </div>
                   <div class="clearfix">
@@ -38,7 +38,7 @@
                         <a href="/forgotPassword" class="text-muted">忘记密码？</a>
                      </div>
                   </div>
-                  <button v-on:click="login" class="btn btn-block btn-primary mt-lg">登录</button>
+                  <button type="submit" class="btn btn-block btn-primary mt-lg">登录</button>
                </form>
                <!-- <p class="pt-lg text-center">社会化登录</p>
                <div class="text-center">
@@ -60,7 +60,7 @@
                   </a>
                </div> -->
                <p></p>
-               <div id="errorMsg" class="alert alert-danger text-center" style="display:none;"></div>
+               <div th:if="${showflg}"  th:text="${errmsg}" id="errorMsg" class="alert alert-danger text-center" ></div>
                <p class="pt-lg text-center">需要注册？</p>
                <a href="/register" class="btn btn-block btn-default">现在就注册</a>
             </div>

@@ -1,4 +1,7 @@
 var mainActiveId='home';
+var firstUrl = null;//第一个页面
+var secondUrl = null;//第二个页面
+var flag = "1";
 function locationUrl(url,activeId){
 	if(mainActiveId != null && mainActiveId != "" && activeId != null && activeId != ""){
 		$("#"+mainActiveId).removeAttr("class");
@@ -67,3 +70,4 @@ function fixUrl(url, params){
 		}
 	}
 }
+
