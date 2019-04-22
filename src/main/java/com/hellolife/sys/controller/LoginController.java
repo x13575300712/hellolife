@@ -1,20 +1,32 @@
 package com.hellolife.sys.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import com.hellolife.sys.dao.Menu;
+import com.hellolife.sys.dao.User;
+import com.hellolife.sys.pub.MenuPub;
+import com.hellolife.sys.service.MenuService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 
 import com.hellolife.sys.enums.ExceptionMsg;
 
 @Controller
 public class LoginController {
-	
+	@Autowired
+	private MenuService menuService;
 	/**
 	 *
 	 *  登陆
@@ -28,8 +40,33 @@ public class LoginController {
 	 *  登陆
 	 */
 	@RequestMapping(value = "/home")
-	public String login() {
-		return "home";
+	public String login(HttpSession session) {
+		MenuPub menuPub = new MenuPub(menuService);
+		List<Menu> menulist = new ArrayList<Menu>();
+		Map<String,List<Menu>>  menuMap = menuPub.getMainMenu(0,menulist);
+		String menuStr = menuPub.getMenu(menulist,menuMap);
+		User user = (User) SecurityUtils.getSubject().getPrincipal();
+		session.setAttribute("userName", user.getUserName());
+		session.setAttribute("menuStr", menuStr);
+		List<User> userList = (List<User>)session.getAttribute("userList");
+		if(userList!=null) {
+			userList.add(user);
+		}else {
+			userList = new ArrayList<User>();
+			userList.add(user);
+		}
+		//redisUtil.set(user.getUserName(), user);
+		session.setAttribute("userList", userList);
+		return "/layout";
+	}
+
+	/**
+	 *
+	 *  主页
+	 */
+	@RequestMapping(value = "/content")
+	public String mainContent(HttpSession session) {
+		return "/mainpart/hello";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)

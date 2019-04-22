@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="mainpart/htmlHead :: common_header(~{::title},~{::link})">
+    <title>热爱生活</title>
+    <link></link>
+</head>
+<!--使用公有js-->
+<div th:replace="mainpart/htmlJS::common_js(~{::script})">
+    <script></script>
+</div>
+<script th:inline="javascript">
+    var rzzlListIndex;
+    function bodyOnload(){
+        $('#rzzlTab').bootstrapTable({
+            url: "/table/rzzlTable",
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            //queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 10,                       //每页的记录行数（*）
+            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            strictSearch: true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+            //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            columns: [{
+                checkbox: true
+            }, {
+                field: 'id',
+                title: '主键',
+                visible:false
+            },{
+                field: 'prjname',
+                title: '项目名称'
+            }, {
+                field: 'prjamt',
+                title: '项目金额'
+            }, {
+                field: 'rate',
+                title: '利率'
+            }, {
+                field: 'bgdt',
+                title: '起息日'
+            },{
+                field: 'enddt',
+                title: '结束日'
+            },{
+                field: 'retway',
+                title: '还款方式'
+            },{
+                field:'caozuo',
+                title: '操作',
+                width: 120,
+                align: 'center',
+                valign: 'middle',
+                formatter: actionFormatter
+                },  ]
+        });
+    }
+    function importFileRzzl(tableSelect,rowid,tilte,width,height){
+        var json =  $(tableSelect).bootstrapTable('getRowByUniqueId',rowid);
+        rzzlListIndex =layer.open({
+            type: 2,
+            title: tilte,
+            maxmin: true,
+            shadeClose: true, //点击遮罩关闭层
+            area : [width+'px' , height+'px'],
+            content: "/importFile?url=/importRzzl&callback=parent.importFlash&data="+encodeURIComponent(JSON.stringify(json))
+        });
+    }
+    function flashRzzlList(){
+        felshTable($("#rzzlTab"),1);
+    }
+    function importFlash(){
+        layer.close(rzzlListIndex);
+        felshTable($("#rzzlTab"),1);
+    }
+    //操作栏的格式化
+   function actionFormatter(value, row, index) {
+        var result = "";
+        result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"excuteRowButton('#rzzlTab','" + row.id + "','/callRzzl',flashRzzlList)\" title='计算项目'><i class='fa fa-fw fa-calendar'></i></a>";
+        result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"importFileRzzl('#rzzlTab','" + row.id + "','文件导入',800,600)\" title='导入租金表'><i class='fa fa-fw fa-file-excel-o'></i></a>";
+        return result;
+   }
+</script>
+<body onload="bodyOnload()">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">项目列表</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="btn-group" role="group" id="toolbar">
+                        <button type="button" onclick="addRow('/createrzzl','','新增',800,600);" class="btn btn-default" >新增</button>
+                        <button type="button" onclick="editRow('#rzzlTab','/createrzzl','id','','修改',800,600)" class="btn btn-default" >修改</button>
+                        <button type="button" class="btn btn-default" onclick="deleteRow('#rzzlTab','/deleteRzzl',flashRzzlList)">删除</button>
+                    </div>
+                    <table id="rzzlTab" class="">
+                        <thead>
+                        </thead>
+                        <tbody id="userTbBody">
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</body>
+</html>

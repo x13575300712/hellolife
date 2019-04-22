@@ -1,27 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+<head th:replace="mainpart/htmlHead :: common_header(~{::title},~{::link})">
+    <title>热爱生活</title>
+    <link></link>
 </head>
-<script>
-    function createUserForm(json){
-        if(!json.errmsg){
-            $("#modal-pub").modal('hide'); //关闭
-            felshTable($("#userTab"),1);
-        }else{
-            alert(json.errmsg);
-        }
-    }
-</script>
 <body>
-<div class="modal-content">
-    <div class="modal-header">
-        <button type="button" data-dismiss="modal" class="close">
-            <span>&times;</span>
-        </button>
-        <h4 class="modal-title">新用户创建</h4>
-    </div>
+<div>
     <form id="createUserForm" role="form" method="post" action="/createuserForm" onsubmit="return validateCallback(this)">
         <div class="modal-body" th:object="${user}">
             <div class="form-group">
@@ -42,7 +26,7 @@
             </div>
             <div class="form-group ">
                 <label>邮箱</label>
-                <input type="text" class="form-control" name="eMail" th:value="*{email}?:''" placeholder="请输入邮箱" required>
+                <input type="text" class="form-control" name="eMail" th:value="*{email}?:''" placeholder="请输入邮箱">
             </div>
 
             <input th:value="*{id}?:''"type="hidden" name="id">
@@ -51,9 +35,74 @@
         <div class="modal-footer">
             <input th:value="${saveFlg}"type="hidden" name="saveFlg">
             <button id="delCollect" type="button" onclick="ajaxForm(this.form,createUserForm)"  class="btn btn-primary">确定</button>
-            <button type="button" data-dismiss="modal" class="btn btn-danger">取消</button>
+            <button type="button" onclick="layerClose()" class="btn btn-danger">取消</button>
         </div>
     </form>
 </div>
 </body>
+<!--使用公有js-->
+<div th:replace="mainpart/htmlJS::common_js(~{::script})">
+<script>
+    function createUserForm(json){
+        if(!json.errmsg){
+            layerClose();
+            felshTable(parent.$("#userTab"),1);
+        }else{
+            alert(json.errmsg);
+        }
+    }
+    (function() {
+        $('#createUserForm').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                userCode: {
+                    message: '用户名不合法',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        }
+                    }
+                },
+                password:{
+                    message: '密码不合法',
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        identical: {
+                            field: 'passwordSure',
+                            message: '两次输入的密码不相符'
+                        }
+                    }
+                },
+                passwordSure:{
+                    message: '确认密码不合法',
+                    validators: {
+                        notEmpty: {
+                            message: '确认密码不能为空'
+                        },
+                        identical: {
+                            field: 'password',
+                            message: '两次输入的密码不相符'
+                        }
+                    }
+                },
+                userName:{
+                    message: '姓名不合法',
+                    validators: {
+                        notEmpty: {
+                            message: '姓名不能为空'
+                        }
+                    }
+                }
+            }
+        });
+    })();
+</script>
+</div>
 </html>

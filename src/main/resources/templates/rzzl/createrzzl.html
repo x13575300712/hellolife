@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="mainpart/htmlHead :: common_header(~{::title},~{::link})">
+    <title>热爱生活</title>
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" th:href="@{/adminLTE/bootstrap-datepicker/css/bootstrap-datepicker.min.css}">
+</head>
+
+<body>
+<div >
+    <form id="createRzzlForm" role="form" method="post" action="/form/createrzzl" onsubmit="return validateCallback(this)">
+        <div class="modal-body" th:object="${callRetInfo}">
+            <div class="form-group">
+                <label>项目名称</label>
+                <input type="text" class="form-control" name="prjname"  th:value="*{prjname}?:''"  placeholder="请输入项目名称">
+            </div>
+            <div class="form-group">
+                <label>项目金额</label>
+                <input type="text" class="form-control" name="prjamt" th:value="*{prjamt}?:''" placeholder="请输入项目金额" >
+            </div>
+            <div class="form-group">
+                <label>利率</label>
+                <input type="text" class="form-control" name="rate" th:value="*{rate}?:''" placeholder="请输入利率" >
+            </div>
+            <div class="form-group ">
+                <label>开始日期</label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" class="form-control pull-right datepicker" name="bgdt" th:value="*{bgdt}?:''" placeholder="请输入开始日期">
+                </div>
+            </div>
+            <div class="form-group ">
+                <label>结束日期</label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" class="form-control pull-right datepicker" name="enddt" th:value="*{enddt}?:''" placeholder="请输入结束日期">
+                </div>
+            </div>
+            <div class="form-group ">
+                <label>首次收息日</label>
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" class="form-control  pull-right datepicker" name="fistdate" th:value="*{fistdate}?:''" placeholder="请输入首次收息日">
+                </div>
+            </div>
+            <div class="form-group ">
+                <label>还款间隔</label>
+                <select class="form-control" name="retspan"  >
+                    <option value="1" th:selected="*{retspan==1}">月</option>
+                    <option value="3" th:selected="*{retspan==3}">季</option>
+                    <option value="6" th:selected="*{retspan==6}">半年</option>
+                    <option value="12" th:selected="*{retspan==12}">年</option>
+                </select>
+            </div>
+            <div class="form-group ">
+                <label>年计算天数</label>
+                <select class="form-control" name="yeardays" >
+                    <option value="360" th:selected="*{yeardays==360}">360</option>
+                    <option value="365" th:selected="*{yeardays==365}">365</option>
+                </select>
+            </div>
+            <div class="form-group ">
+                <label>利率计算天数</label>
+                <select class="form-control" name="dayratedays"  >
+                    <option value="360" th:selected="*{dayratedays==360}">360</option>
+                    <option value="365" th:selected="*{dayratedays==365}">365</option>
+                </select>
+            </div>
+            <div class="form-group ">
+                <label>还款方式</label>
+                <select class="form-control" name="retway" >
+                    <option value="1" th:selected="*{retway=='1'}">等额还款</option>
+                    <option value="2" th:selected="*{retway=='2'}">等本还款</option>
+                </select>
+            </div>
+            <input th:value="*{id}?:''"type="hidden" name="id">
+        </div>
+        <div class="modal-footer">
+            <input th:value="${saveFlg}"type="hidden" name="saveFlg">
+            <button type="button" onclick="ajaxForm(this.form,createMenuForm)"  class="btn btn-primary">确定</button>
+            <button type="button" onclick="layerClose()" class="btn btn-danger">取消</button>
+        </div>
+    </form>
+</div>
+</body>
+<!--使用公有js-->
+<div th:replace="mainpart/htmlJS::common_js(~{::script})">
+    <!-- bootstrap datepicker -->
+    <script th:src="@{/adminLTE/bootstrap-datepicker/js/bootstrap-datepicker.js}"></script>
+    <script>
+        function createMenuForm(json) {
+            if (!json.errmsg) {
+                layerClose();
+                parent.flashMenuList();
+            } else {
+                alert(json.errmsg);
+            }
+        }
+        (function() {
+            $('#createRzzlForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    prjname: {
+                        message: '项目名称不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '项目名称不能为空'
+                            }
+                        }
+                    }
+                }
+            });
+            $('.datepicker').datepicker({
+                language: "zh-cn",
+                autoclose: true,//选中之后自动隐藏日期选择框
+                clearBtn: true,//清除按钮
+                todayBtn: true,//今日按钮
+                format: "yyyy-mm-dd"
+            });
+        })();
+
+    </script>
+</div>
+</html>

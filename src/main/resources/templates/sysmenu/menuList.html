@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="mainpart/htmlHead :: common_header(~{::title},~{::link})">
+    <title>热爱生活</title>
+    <link></link>
+</head>
+<!--使用公有js-->
+<div th:replace="mainpart/htmlJS::common_js(~{::script})">
+    <script></script>
+</div>
+<script th:inline="javascript">
+    function getTree(){
+        var tree = [[${treeData}]];
+        return tree;
+    }
+    function bodyOnload() {
+        $('#tree').treeview({
+            data: getTree(),
+            onNodeSelected: function (event, data) {
+                goUrl('/menuTable', 'id=' + data['id'], "#menuContent");
+            }
+        });
+        goUrl('/menuTable', 'id=0', "#menuContent");
+    }
+</script>
+<body onload="bodyOnload()">
+    <section class="content-header">
+        <h1>
+            Mailbox
+            <small>13 new messages</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Mailbox</li>
+        </ol>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-3">
+                <a href="compose.html" class="btn btn-primary btn-block margin-bottom">Compose</a>
+
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Folders</h3>
+
+                        <div class="box-tools">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body no-padding">
+                        <div id="tree"></div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+
+            </div>
+            <!-- /.col -->
+            <div class="col-md-9">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Inbox</h3>
+
+                        <!--<div class="box-tools pull-right">
+                            <div class="has-feedback">
+                                <input type="text" class="form-control input-sm" placeholder="Search Mail">
+                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                            </div>
+                        </div>-->
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div id="menuContent" class="box-body no-padding">
+
+
+                    </div>
+                    <!-- /.box-body -->
+                    <!--<div class="box-footer no-padding">
+                        <div class="mailbox-controls">
+                            <!-- Check all button
+                            <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
+                            </button>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
+                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-reply"></i></button>
+                                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-share"></i></button>
+                            </div>
+                            <!-- /.btn-group
+                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
+                            <div class="pull-right">
+                                1-50/200
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+                                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
+                                </div>
+                                <!-- /.btn-group
+                            </div>
+                            <!-- /.pull-right
+                        </div>-->
+                    </div>
+                </div>
+                <!-- /. box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+</body>
+</html>

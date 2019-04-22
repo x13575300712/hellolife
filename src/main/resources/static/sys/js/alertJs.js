@@ -1,4 +1,4 @@
-/*  依赖  messenger.js */
+/*  依赖  messenger.js layer.js*/
 function alertWorn(message){
     alertCon(message,"info",2,true,true);
 }
@@ -10,4 +10,13 @@ function alertCon(message,type,time,closeable,hiddenPreview){
         showCloseButton:closeable,//是否显示关闭按钮
         hideOnNavigate: hiddenPreview //是否隐藏导航
     });
+}
+/*关闭当前layer弹出层*/
+function layerClose(){
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+    parent.layer.close(index);
+}
+function layerCloseP(){
+    var index = layer.getFrameIndex(window.name); //获取窗口索引
+    layer.close(index);
 }

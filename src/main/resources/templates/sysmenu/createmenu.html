@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="mainpart/htmlHead :: common_header(~{::title},~{::link})">
+    <title>热爱生活</title>
+    <link></link>
+</head>
+<body>
+<div >
+    <form id="createUserForm" role="form" method="post" action="/form/createmenu" onsubmit="return validateCallback(this)">
+        <div class="modal-body" th:object="${menu}">
+            <div class="form-group">
+                <label>父菜单名称</label>
+                <input type="text" class="form-control"  th:value="${parentName}?:''"  readonly>
+            </div>
+            <div class="form-group">
+                <label>菜单名称</label>
+                <input type="text" class="form-control" name="name" th:value="*{name}?:''" placeholder="请输入菜单名称" required>
+            </div>
+            <div class="form-group">
+                <label>路径</label>
+                <input type="text" class="form-control" name="url" th:value="*{url}?:''" placeholder="请输入路径" required>
+            </div>
+            <div class="form-group ">
+                <label>图标</label>
+                <input type="text" class="form-control" name="icno" th:value="*{icno}?:''" placeholder="请输入图标">
+            </div>
+            <div class="form-group ">
+                <label>方法</label>
+                <input type="text" class="form-control" name="attr" th:value="*{attr}?:''" placeholder="请输入方法">
+            </div>
+            <div class="form-group ">
+                <label>排序</label>
+                <input type="text" class="form-control" name="orderNum" th:value="*{orderNum}?:''" placeholder="请输入排序">
+            </div>
+
+            <input th:value="*{id}?:''"type="hidden" name="id">
+            <input th:value="${parentId}?:''"type="hidden" name="parentId">
+        </div>
+        <div class="modal-footer">
+            <input th:value="${saveFlg}"type="hidden" name="saveFlg">
+            <button type="button" onclick="ajaxForm(this.form,createMenuForm)"  class="btn btn-primary">确定</button>
+            <button type="button" onclick="layerClose()" class="btn btn-danger">取消</button>
+        </div>
+    </form>
+</div>
+</body>
+<!--使用公有js-->
+<div th:replace="mainpart/htmlJS::common_js(~{::script})">
+    <script>
+        function createMenuForm(json) {
+            if (!json.errmsg) {
+                layerClose();
+                parent.flashMenuList();
+            } else {
+                alert(json.errmsg);
+            }
+        }
+        (function() {
+            $('#createUserForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    name: {
+                        message: '菜单名称不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '菜单名称不能为空'
+                            }
+                        }
+                    },
+                    url:{
+                        message: '路径不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '路径不能为空'
+                            }
+                        }
+                    },
+                    orderNum:{
+                        message: '排序不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '排序不能为空'
+                            }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+</div>
+</html>

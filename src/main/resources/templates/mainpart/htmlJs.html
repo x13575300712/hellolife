@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="common_js(scripts)">
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script th:src="@{/webjars/bootstrap/3.3.6/dist/js/bootstrap.min.js}"></script>
+    <!-- 主页tab操作 -->
+    <script th:src="@{/adminLTE/dist/js/app.js}" ></script>
+    <script th:src="@{/adminLTE/dist/js/demo.js}"></script>    <!-- AdminLTE for demo purposes -->
+    <script th:src="@{/adminLTE/dist/js/app_iframe.js}" ></script>
+    <!-- FastClick -->
+    <script th:src="@{/adminLTE/fastclick/lib/fastclick.js}" ></script>
+    <!-- AdminLTE App <script th:src="@{/adminLTE/dist/js/adminlte.min.js}"></script> -->
+    <!-- Sparkline -->
+    <script th:src="@{/adminLTE/jquery-sparkline/dist/jquery.sparkline.min.js}"></script>
+    <!-- jvectormap  -->
+    <script th:src="@{/adminLTE/jvectormap/jquery-jvectormap-1.2.2.min.js}"></script>
+    <script th:src="@{/adminLTE/jvectormap/jquery-jvectormap-world-mill-en.js}"></script>
+    <!-- SlimScroll -->
+    <script th:src="@{/adminLTE/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+    <!-- ChartJS -->
+    <script th:src="@{/adminLTE/chart.js/Chart.js}"></script>
+    <!-- jquery.form -->
+    <script th:src="@{/vendor/jquery.form/jquery.form.min.js}"></script>
+    <!-- boostratable -->
+    <script th:src="@{/sys/boostratable/bootstrap-table.js}"></script>
+    <script th:src="@{/sys/boostratable/locale/bootstrap-table-zh-CN.js}"></script>
+    <!-- contextMenu -->
+    <script th:src="@{/sys/js/jquery.contextMenu.min.js}"></script>
+    <!-- messenger -->
+    <script th:src="@{/sys/messenger/js/messenger.js}"></script>
+    <!-- bootstrap-treeview -->
+    <script th:src="@{/sys/bootstrap-treeview/bootstrap-treeview.min.js}"></script>
+    <!-- bootstrapvalidator -->
+    <script th:src="@{/sys/bootstrapvalidator/js/bootstrapValidator.min.js}"></script>
+    <!-- layer -->
+    <script th:src="@{/sys/layer/layer.js}"></script>
+    <!-- jquery.serializeJSON-master -->
+    <script th:src="@{/sys/jquery.serializeJSON-master/jquery.serializejson.min.js}"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) <script th:src="@{/adminLTE/dist/js/pages/dashboard2.js}"></script>-->
+
+
+    <script th:src="@{/sys/js/comm.js}"></script>
+    <script th:src="@{/sys/js/formJs.js}"></script>
+    <script th:src="@{/sys/js/tableJs.js}"></script>
+    <script th:src="@{/sys/js/alertJs.js}"></script>
+    <script th:src="@{/sys/js/adminLteUtil.js}"></script>
+    <script>
+        //初始化messenger位置future block air ice
+        $._messengerDefaults = {
+            extraClasses: 'messenger-fixed messenger-theme-block messenger-on-top '
+        }
+
+    </script>
+    <!-- 子页面私有js-->
+    <th:block th:replace="${scripts}" />
+</div>
+</body>
+</html>

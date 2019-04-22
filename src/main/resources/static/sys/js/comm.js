@@ -1,18 +1,28 @@
 var mainActiveId='home';
+var divId='#content';
+var frameFlg = false;
 var firstUrl = null;//第一个页面
 var secondUrl = null;//第二个页面
+var xmlhttp = new getXMLObject();
 var flag = "1";
-function locationUrl(url,activeId){
+//url : 转向地址，activId:活动菜单id，parent ： 是否属于layer弹出框调用 true代表是
+function locationUrl(url,activeId,parent){
+	if(parent){
+        frameFlg = true;
+	}else{
+        frameFlg = false;
+	}
 	if(mainActiveId != null && mainActiveId != "" && activeId != null && activeId != ""){
 		$("#"+mainActiveId).removeAttr("class");
 		$("#"+activeId).attr("class", "active");
 		mainActiveId = activeId;
 	}
-	goUrl(url,null);
+	goUrl(url,null,"#content");
 }
 
-var xmlhttp = new getXMLObject();
-function goUrl(url,params) {
+
+function goUrl(url,params,idSelect) {
+    divId = idSelect;
 	fixUrl(url,params);
 	if(xmlhttp) {
 		//var params = "";
@@ -48,7 +58,11 @@ function handleServerResponse() {
 		if(text.indexOf("<title>Favorites error Page</title>") >= 0){
 			window.location.href="/error.html";
 		}else{
-			$("#content").html(xmlhttp.responseText);
+			if(frameFlg){
+                parent.$(divId).html(xmlhttp.responseText);
+			}else{
+                $(divId).html(xmlhttp.responseText);
+			}
 		}
 	}
 }
@@ -69,5 +83,10 @@ function fixUrl(url, params){
 			flag = 1;
 		}
 	}
+}
+
+function getHeight(xiShu) {
+    var height = $('.content-wrapper, .right-side').css("minHeight");
+    return height.substr(0,height.length-2)*xiShu;
 }
 

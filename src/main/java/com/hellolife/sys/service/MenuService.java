@@ -19,4 +19,18 @@ public class MenuService {
       public List<Menu> getMenuByParent(long parentId) {
     	  return menuMapper.getMenuByParent(parentId);
       }
+
+      public Menu getMenuById(long id) {
+    	  return menuMapper.getMenuById(id);
+      }
+      public  int updateMenu(Menu m ) {
+          return menuMapper.updateMenu(m);
+      }
+      public  int genMenu(Menu m ) {
+          return menuMapper.genMenu(m);
+      }
+      public  int deleteMenu(long id ) {
+          return menuMapper.deleteMenu(id);
+      }
+
 }

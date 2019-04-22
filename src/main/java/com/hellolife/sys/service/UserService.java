@@ -1,5 +1,8 @@
 package com.hellolife.sys.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.hellolife.sys.pub.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,6 @@ public class UserService {
         	 return userMapper.deleteUser(userCode);
         }
         public  List<User> getAllUser() {
-            return userMapper.getAllUser();
+                return userMapper.getAllUser();
         }
 }

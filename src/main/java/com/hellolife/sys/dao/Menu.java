@@ -11,10 +11,12 @@ public class Menu implements Serializable {
 	private String url;
 
 	private String icno;
+
+	private String attr;
+
+	private Long parentId;
 	
-	private String parentId;
-	
-	private String order;
+	private int orderNum;
 
 	public Long getId() {
 		return id;
@@ -48,20 +50,28 @@ public class Menu implements Serializable {
 		this.icno = icno;
 	}
 
-	public String getParentId() {
+	public String getAttr() {
+		return attr;
+	}
+
+	public void setAttr(String attr) {
+		this.attr = attr;
+	}
+
+	public Long getParentId() {
 		return parentId;
 	}
 
-	public void setParentId(String parentId) {
+	public void setParentId(Long parentId) {
 		this.parentId = parentId;
 	}
 
-	public String getOrder() {
-		return order;
+	public int getOrderNum() {
+		return orderNum;
 	}
 
-	public void setOrder(String order) {
-		this.order = order;
+	public void setOrderNum(int orderNum) {
+		this.orderNum = orderNum;
 	}
 
 	
