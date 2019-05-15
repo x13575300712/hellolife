@@ -12,19 +12,22 @@
     <title th:replace="${title}">热爱生活</title>
     <!-- 子页面私有css-->
     <th:block th:replace="${links}" />
-    <link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}" />
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.6/dist/css/bootstrap.min.css}" id="bscss"></link>
     <!-- Font Awesome -->
-    <link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}"></link>
+    <link rel="stylesheet" th:href="@{/vendor/fontawesome/css/font-awesome.min.css}"/>
     <!-- Ionicons -->
     <link rel="stylesheet" th:href="@{/adminLTE/Ionicons/css/ionicons.min.css}">
     <!-- jvectormap -->
     <link rel="stylesheet" th:href="@{/adminLTE/jvectormap/jquery-jvectormap.css}">
     <!-- Theme style -->
     <link rel="stylesheet" th:href="@{/adminLTE/dist/css/AdminLTE.min.css}">
+
     <!-- boostratable -->
     <link rel="stylesheet" th:href="@{/sys/boostratable/bootstrap-table.min.css}">
+    <!--jqgrid  <link rel="stylesheet" type="text/css" media="screen" th:href="@{/sys/jqGrid/css/ui.jqgrid-bootstrap.css}" />-->
+
+
     <!-- contextMenu -->
     <link rel="stylesheet"  th:href="@{/sys/css/jquery.contextMenu.min.css}">
     <!-- messenger -->
@@ -38,6 +41,7 @@
     <link rel="stylesheet" th:href="@{/adminLTE/dist/css/skins/_all-skins.min.css}">
     <!-- Google Font -->
     <link rel="stylesheet"href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <!-- myAdminLTE <link rel="stylesheet" th:href="@{/sys/css/myAdminLTE.css}"> -->
 
 </head>
 <body>

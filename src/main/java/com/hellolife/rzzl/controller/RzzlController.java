@@ -1,13 +1,17 @@
 package com.hellolife.rzzl.controller;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.ExcelImportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
+import cn.afterturn.easypoi.excel.entity.result.ExcelImportResult;
 import cn.afterturn.easypoi.util.PoiPublicUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hellolife.rzzl.dao.CallRetInfo;
+import com.hellolife.rzzl.dao.ExcelRetDetail;
 import com.hellolife.rzzl.dao.RetInfoDetail;
 import com.hellolife.rzzl.pub.RzzlPub;
 import com.hellolife.rzzl.service.CallRetInfoService;
@@ -19,6 +23,7 @@ import com.hellolife.sys.pub.MenuPub;
 import com.hellolife.sys.pub.SnowflakeIdWorker;
 import com.hellolife.sys.pub.pubfunction;
 import com.hellolife.sys.service.MenuService;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -31,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.*;
 
 @Controller
@@ -156,7 +162,7 @@ public class RzzlController {
 		RzzlPub rzzlPub = new RzzlPub();
 		try{
 			List<RetInfoDetail> callList = rzzlPub.callEveryRet(callRetInfo,0,0);
-			System.out.println(callList.size());
+			retInfoDetailService.deleteRetDetail(callRetInfo.getId());
 			retInfoDetailService.insertRetInfoList(callList);
 		}catch (Exception e){
 			e.printStackTrace();
@@ -166,30 +172,100 @@ public class RzzlController {
 	}
 	/**
 	 *
-	 *  计算项目
+	 *  导入租金表
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/importRzzl")
 	public String importRzzl(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+		JSONObject returnJson = new JSONObject();
 		String rzzls = request.getParameter("data");
 		CallRetInfo callRetInfo = JSONObject.parseObject(rzzls,CallRetInfo.class);
-		RzzlPub rzzlPub = new RzzlPub();
 		if (!file.isEmpty()) {
 			ImportParams params = new ImportParams();
-			long start = new Date().getTime();
+			params.setNeedVerfiy(true);
 			try{
-				List<Map<String, Object>> list = ExcelImportUtil.importExcel(file.getInputStream(), Map.class, params);
-				for (Map<String, Object> m : list) {
-					Set<String> set = m.keySet();
-					for (String key : set) {
-						System.out.println("___________________________" + key + "_)____" + m.get(key));
+				ExcelImportResult<ExcelRetDetail> exIr = ExcelImportUtil.importExcelMore(file.getInputStream(), ExcelRetDetail.class, params);
+				if(!exIr.isVerfiyFail()) {
+					List<ExcelRetDetail> list = exIr.getList();
+					if (list != null && list.size() > 0) {
+						List<RetInfoDetail> dataList = new ArrayList<>();
+						RetInfoDetail retInfoDetail;
+						long prjid = callRetInfo.getId();
+						SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);//id生成器
+						for (int i = 0; i < list.size(); i++) {
+							ExcelRetDetail e = list.get(i);
+							int days = 0;
+							String startDate;
+							String endDate = pubfunction.pubDateFormat(e.getEndDate());
+							if (i == 0) {
+								startDate = pubfunction.pubDateFormat(e.getEndDate());
+							} else {
+								startDate = pubfunction.pubDateFormat(list.get(i - 1).getEndDate());
+							}
+							if (callRetInfo.getYeardays() == 365) {
+								days = pubfunction.getDays365(startDate, endDate);
+							} else {
+								days = pubfunction.getDays360(startDate, endDate);
+							}
+							retInfoDetail = new RetInfoDetail();
+							retInfoDetail.setPrjId(prjid);
+							retInfoDetail.setLvamt(e.getLvamt());
+							retInfoDetail.setCalldays(days);
+							retInfoDetail.setRetBal(e.getRetBal());
+							retInfoDetail.setRetAmt(e.getRetAmt());
+							retInfoDetail.setStartDate(startDate);
+							retInfoDetail.setRetDate(pubfunction.pubDateFormat(e.getRetDate()));
+							retInfoDetail.setEndDate(endDate);
+							retInfoDetail.setRetInt(e.getRetInt());
+							retInfoDetail.setId(idWorker.nextId());
+							dataList.add(retInfoDetail);
+						}
+						retInfoDetailService.deleteRetDetail(prjid);
+						retInfoDetailService.insertRetInfoList(dataList);
 					}
+				}else{
+					returnJson.put("errmsg","导入失败，模板填写不正确");
 				}
 			}catch (Exception e){
 				e.printStackTrace();
 			}
 		}
-		JSONObject returnJson = new JSONObject();
 		return returnJson.toJSONString();
+	}
+	@RequestMapping(value = "/rzzlDeTab")
+	public String rzzlDeTab(HttpServletRequest request,Model model) {
+		String prjId = request.getParameter("prjId");
+		model.addAttribute("prjId",prjId);
+		return "/rzzl/rzzlDetailList";
+	}
+	/**
+	 *
+	 *  查询融资租赁还款列表
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/table/rzzlDeTab")
+	public String rzzlDeTab(HttpServletRequest request) {
+		JSONObject result = new JSONObject();
+		JSONArray array = new JSONArray();
+		String prjId = request.getParameter("prjId");
+		List<RetInfoDetail> retInfoList = retInfoDetailService.selectByPrjId(prjId);
+		JSONObject jsonObject = null;
+		if(retInfoList!=null){
+			for(RetInfoDetail retInfoDetail : retInfoList){
+				jsonObject = new JSONObject();
+				jsonObject.put("id",retInfoDetail.getId());
+				jsonObject.put("enddate",retInfoDetail.getEndDate());
+				jsonObject.put("startdate",retInfoDetail.getStartDate());
+				jsonObject.put("calldays",retInfoDetail.getCalldays());
+				jsonObject.put("lvamt",retInfoDetail.getLvamt());
+				jsonObject.put("retamt",retInfoDetail.getRetAmt());
+				jsonObject.put("retbal",retInfoDetail.getRetBal());
+				jsonObject.put("retdate",retInfoDetail.getRetDate());
+				jsonObject.put("retint",retInfoDetail.getRetInt());
+				array.add(jsonObject);
+			}
+		}
+		result.put("rows",array);
+		return result.toJSONString();
 	}
 }

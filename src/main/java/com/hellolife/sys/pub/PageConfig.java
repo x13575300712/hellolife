@@ -5,6 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Properties;
+/**
+ *
+ * 分页配置类
+ *
+ *
+ * */
 @Configuration
 public class PageConfig {
     @Bean

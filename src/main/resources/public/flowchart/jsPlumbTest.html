@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>jsplumb-viso</title>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/webjars/bootstrap/3.3.6/dist/css/bootstrap.min.css" ></link>
+  <link rel="stylesheet" href="/sys/css/jquery.contextMenu.min.css">
+  <link rel="stylesheet" href="/sys/flowchart/index.css">
+</head>
+<script>
+function getFlowid (){
+	return "1";
+}
+function dropNodeWithModel(){
+	var maxNodesn = $("#maxNodesn").val();
+	var name = $("#name").val();
+	var position = {};
+	var template = $("#template").val();
+	position.left = $("#positionl").val();
+	position.top = $("#positiont").val();
+    position.left -= $('#side-buttons').outerWidth();
+    position.id = uuid.v1();
+    position.generateId = uuid.v1;
+    position.name = name;
+    position.nodesn = maxNodesn;
+    var html = renderHtml(template, position);
+    $(areaId).append(html);
+    initSetNode(template, position.id);
+    $("#name").val("");
+    $("#maxNodesn").val(parseFloat(maxNodesn)+1);
+}
+function save(){
+	saveFlowchart();
+}
+function saveFlowchart(){
+    var nodes = []
+    $(".pa").each(function (idx, elem) {
+    var $elem = $(elem);
+    var endpoints = jsPlumb.getEndpoints($elem.attr('id'));
+        nodes.push({
+            blockId: $elem.attr('id'),
+            nodeId: $elem.attr('nodeId'),
+            name: $elem.attr('nodeName'),
+            nodesn: $elem.attr('nodesn'),
+            positionX: parseInt($elem.css("left"), 10),
+            positionY: parseInt($elem.css("top"), 10)
+        });
+    });
+    var connections = [];
+    $.each(jsPlumb.getConnections(), function (idx, connection) {
+        connections.push({
+            connectionId: connection.id,
+            pageSourceId: connection.sourceId,
+            pageTargetId: connection.targetId
+        });
+    });
+
+    var flowChart = {};
+    flowChart.nodes = nodes;
+    flowChart.connections = connections;
+    flowChart.numberOfElements = 0;
+
+    var flowChartJson = JSON.stringify(flowChart);
+    var flowid = getFlowid();
+    $.ajax({
+	    type: "post",
+	    url: "/test/jsPlumbTestSave",    //向后端请求数据的url
+	    data: {"flowChartJson":flowChartJson,"flowid":flowid},
+	    success: function (result) {
+	    	alert("保存成功");
+	    }
+	});
+}
+
+</script>
+
+<body>
+<!-- 模态框 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">请输入节点名称</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+		          	<input type="text" class="form-control has-feedback-left"  name="name" id="name" placeholder="节点名">
+				</div>
+            	<input type="hidden" name="template" id="template" value="" >
+            	<input type="hidden" name="position" id="positionl" value="" >
+            	<input type="hidden" name="position" id="positiont" value="" >
+            	<input type="hidden" name="maxNodesn" id="maxNodesn" value="" >
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="dropNodeWithModel()">确认</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+  <div id="app">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 bg-success min-height context-menu-one" id="drop-bg" >
+			
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <script id="tpl-audio" type="text/html">
+
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+      <a class='btn btn-default' href='#' role='button'> {{name}}
+
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+      </a>
+
+    </div>
+
+  </script>
+
+
+
+  <script id="tpl-demo" type="text/html">
+
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+      <a class='btn btn-default' href='#' role='button'> {{name}}
+
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+      </a>
+
+    </div>
+
+  </script>
+
+
+
+  <script id="tpl-Announce" type="text/html">
+
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+
+
+      <a class='btn btn-default' href='#' role='button'>
+
+        <i class="fa fa-play-circle-o" aria-hidden="true"></i>
+
+        {{name}}
+
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+      </a>
+
+    </div>
+
+  </script>
+  
+    <script id="tpl-Mytest" type="text/html">
+
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px' nodeName='{{name}}' nodeId='{{nodeid}}' nodesn='{{nodesn}}'>
+
+      <a class='btn btn-default' href='#' role='button'>
+
+        <i class="fa fa-play-circle-o" aria-hidden="true"></i>
+
+        {{name}}
+
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+      </a>
+
+    </div>
+
+  </script>
+
+
+
+  <script id="tpl-menu" type="text/html">
+
+    <div class="pa" id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+      <div class="panel panel-default panel-node panel-info">
+
+        <div id='{{id}}-heading' data-id="{{id}}" class="panel-heading">菜单
+
+          <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+        </div>
+
+        <ul class="list-group">
+
+          <li id="{{generateId}}" data-pid="{{id}}" class="list-group-item panel-node-list">按1
+
+          </li>
+
+          <li id="{{generateId}}" data-pid="{{id}}" class="list-group-item panel-node-list">按2
+
+          </li>
+
+          <li id="{{generateId}}" data-pid="{{id}}" class="list-group-item panel-node-list">按3
+
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </script>
+
+
+
+  <script id="tpl-Root" type="text/html">
+
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+      <a class='btn btn-success' href='#' role='button'> {{name}}
+
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+      </a>
+
+    </div>
+
+  </script>
+
+
+
+  <script id="tpl-Exit" type="text/html">
+
+    <div class='pa' id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+      <a class='btn btn-danger' href='#' role='button'> {{name}}
+
+        <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+      </a>
+
+    </div>
+
+  </script>
+
+
+
+  <script id="tpl-WorkTime" type="text/html">
+
+    <div class="pa" id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+      <div class="panel panel-default panel-node panel-info">
+
+        <div id='{{id}}-heading' data-id="{{id}}" class="panel-heading"><i class="fa fa-calendar-times-o" aria-hidden="true"></i> {{name}}
+
+          <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+        </div>
+
+        <ul class="list-group">
+
+          <li id="{{id}}-onWorkTime" data-pid="{{id}}" class="list-group-item panel-node-list">工作时间
+
+          </li>
+
+          <li id="{{id}}-offWorkTime" data-pid="{{id}}" class="list-group-item panel-node-list">非工作时间
+
+          </li>
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </script>
+
+
+
+  <script id="tpl-Menu" type="text/html">
+
+    <div class="pa" id='{{id}}' style='top:{{top}}px;left:{{left}}px'>
+
+      <div class="panel panel-default panel-node panel-info">
+
+        <div id='{{id}}-heading' data-id="{{id}}" class="panel-heading"><i class="fa fa-navicon" aria-hidden="true"></i> {{name}}
+
+          <span class="delete-node pull-right" data-type="deleteNode" data-id="{{id}}">X</span>
+
+        </div>
+
+        <ul class="list-group">
+
+          <li id="{{id}}-noinput" data-pid="{{id}}" class="list-group-item panel-node-list">输入超时
+
+          </li>
+
+          <li id="{{id}}-nomatch" data-pid="{{id}}" class="list-group-item panel-node-list">输入错误
+
+          </li>
+
+          {{#choices}}
+
+          <li id="{{id}}-key-{{key}}" data-pid="{{id}}" class="list-group-item panel-node-list">按{{key}}
+
+          </li>{{/choices}}
+
+        </ul>
+
+      </div>
+
+    </div>
+
+  </script>
+   <script src="/webjars/jquery/jquery.min.js"></script>
+
+   <script src="/webjars/bootstrap/3.3.6/dist/js/bootstrap.min.js"></script>
+
+   <script src="/sys/flowchart/uuid.min.js"></script>
+
+  <script src="/sys/flowchart/mustache.min.js"></script>
+
+  <script src="/sys/flowchart/jquery-ui.js"></script>
+
+  <script src="/sys/flowchart/jquery.jsPlumb.min.js"></script>
+  
+  <script src="/sys/js/jquery.contextMenu.min.js"></script>
+  
+  <script src="/sys/flowchart/jquery.ui.position.min.js"></script>
+
+  <script src="/sys/flowchart/graphlib.min.js"></script>
+  
+  <script src="/sys/flowchart/flowchartDraw.js"></script>
+</body>
+<script>
+$(function() {
+    $.contextMenu({
+        selector: '.context-menu-one', 
+        callback: function(key, options) {
+        	var e = window.event;
+        	var position = {};
+        	position['left'] = e.screenX;
+        	position['top'] = e.screenY;
+        	if("edit"==key){
+        		dropNode("tpl-Mytest", position);
+        	}
+        	if("paste"==key){
+        		save();
+        	}
+        },
+        position: function(opt, x, y){
+        	$('#positionl').val(x);
+        	$('#positiont').val(y);
+            opt.$menu.css({top: y, left: x});
+        },
+        items: {
+            "edit": {name: "创建节点", icon: "edit"},
+            "sep1": "---------",
+            "paste": {name: "保存", icon: "paste"},
+        }
+    });
+ 
+});
+
+
+</script>
+
+</html>

@@ -2,6 +2,9 @@ package com.hellolife.shiro;
 
 import javax.annotation.Resource;
 
+import com.hellolife.sys.service.PermissionService;
+import com.hellolife.sys.service.RoleService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -16,23 +19,36 @@ import com.hellolife.sys.dao.Permission;
 import com.hellolife.sys.dao.Role;
 import com.hellolife.sys.dao.User;
 import com.hellolife.sys.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MyShiroRealm extends AuthorizingRealm {
 	@Resource
     private UserService userService;
-	
+	@Autowired
+    private RoleService roleService;
+	@Autowired
+    private PermissionService permissionService;
+
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-	    System.out.println("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");
-	    SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-	    User userInfo  = (User)principals.getPrimaryPrincipal();
-	    for(Role role:userInfo.getRoleList()){
-	        authorizationInfo.addRole(role.getRole());
-	        for(Permission p:role.getPermission()){
-	            authorizationInfo.addStringPermission(p.getPermission());
-	        }
-	    }
-	    return authorizationInfo;
+		User userInfo  = (User)principals.getPrimaryPrincipal();
+		long userId = userInfo.getId();
+		SimpleAuthorizationInfo info=new SimpleAuthorizationInfo();
+		Set<String> roles=new HashSet<String>();
+		List<Role> rolesList = roleService.selectRole(userId);
+		for(Role role:rolesList) {
+			roles.add(role.getRole());
+		}
+		List<Permission> permissions = permissionService.selectPermission(userId);
+		for(Permission permission:permissions) {
+			info.addStringPermission(permission.getPermission());
+		}
+		info.setRoles(roles);
+		return info;
 	}
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {

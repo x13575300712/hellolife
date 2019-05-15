@@ -43,8 +43,13 @@ public class LoginController {
 	public String login(HttpSession session) {
 		MenuPub menuPub = new MenuPub(menuService);
 		List<Menu> menulist = new ArrayList<Menu>();
-		Map<String,List<Menu>>  menuMap = menuPub.getMainMenu(0,menulist);
-		String menuStr = menuPub.getMenu(menulist,menuMap);
+		String menuStr = "";
+		try {
+			Map<String,List<Menu>>  menuMap = menuPub.getMainMenu(0,menulist);
+			menuStr = menuPub.getMenu(menulist, menuMap);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		User user = (User) SecurityUtils.getSubject().getPrincipal();
 		session.setAttribute("userName", user.getUserName());
 		session.setAttribute("menuStr", menuStr);

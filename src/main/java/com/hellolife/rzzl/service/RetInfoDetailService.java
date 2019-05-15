@@ -15,4 +15,10 @@ public class RetInfoDetailService {
       public int insertRetInfoList(List<RetInfoDetail> retInfoList) {
           return retInfoDetailMapper.insertRetInfoList(retInfoList);
       }
+      public int deleteRetDetail(long prjId){
+          return retInfoDetailMapper.deleteRetDetail(prjId);
+      }
+      public List<RetInfoDetail> selectByPrjId(String prjId){
+          return retInfoDetailMapper.selectByPrjId(prjId);
+      }
 }

@@ -31,6 +31,9 @@ public class UserService {
         public  int deleteUser(String userCode) {
         	 return userMapper.deleteUser(userCode);
         }
+        public  List<User> getAllUserByName(String userName) {
+                return userMapper.getAllUserByName(userName);
+        }
         public  List<User> getAllUser() {
                 return userMapper.getAllUser();
         }

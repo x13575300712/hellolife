@@ -1,7 +1,5 @@
 package com.hellolife.sys.dao;
 
-import java.util.List;
-
 public class Permission {
 	private Integer id;// 主键.
 	private String name;// 名称.
@@ -11,7 +9,6 @@ public class Permission {
 	private Long parentId; // 父编号
 	private String parentIds; // 父编号列表
 	private Boolean available;
-	private List<Role> roles;
 
 	public Integer getId() {
 		return id;
@@ -75,13 +72,5 @@ public class Permission {
 
 	public void setAvailable(Boolean available) {
 		this.available = available;
-	}
-
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
 	}
 }

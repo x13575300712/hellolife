@@ -10,6 +10,7 @@ import com.hellolife.sys.pub.MenuPub;
 import com.hellolife.sys.pub.SnowflakeIdWorker;
 import com.hellolife.sys.pub.pubfunction;
 import com.hellolife.sys.service.MenuService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

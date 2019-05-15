@@ -20,7 +20,9 @@ public interface UserMapper {
 	 int genUser(User user);
 	 @Update("update sysuser set username=#{userName},email=#{email},state=#{state},usercode=#{userCode} where id=#{id}")
 	 int updateUser(User user);
-	 @Select("Select * from sysuser")
+	 @Select("Select * from sysuser where username like #{userName} ")
+	 List<User> getAllUserByName(String userName);
+	 @Select("Select * from sysuser ")
 	 List<User> getAllUser();
 	 @Delete("delete from sysuser where usercode = #{usercode}")
 	 int deleteUser(String usercode);

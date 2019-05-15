@@ -83,13 +83,25 @@
     function flashRzzlList(){
         felshTable($("#rzzlTab"),1);
     }
-    function importFlash(){
-        layer.close(rzzlListIndex);
-        felshTable($("#rzzlTab"),1);
+    function importFlash(json){
+        if(json){
+            var result = JSON.parse(json);
+            if(result.errmsg){
+                alert(result.errmsg);
+            }else{
+                layer.close(rzzlListIndex);
+                felshTable($("#rzzlTab"),1);
+            }
+        }else{
+            layer.close(rzzlListIndex);
+            felshTable($("#rzzlTab"),1);
+        }
+
     }
     //操作栏的格式化
    function actionFormatter(value, row, index) {
         var result = "";
+        result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"addRow('/rzzlDeTab','&prjId=" +row.id+ "','租金表信息',800,600)\" title='查看租金表'><i class='fa fa-fw fa-calendar'></i></a>";
         result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"excuteRowButton('#rzzlTab','" + row.id + "','/callRzzl',flashRzzlList)\" title='计算项目'><i class='fa fa-fw fa-calendar'></i></a>";
         result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"importFileRzzl('#rzzlTab','" + row.id + "','文件导入',800,600)\" title='导入租金表'><i class='fa fa-fw fa-file-excel-o'></i></a>";
         return result;

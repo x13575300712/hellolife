@@ -1,12 +1,15 @@
 package com.hellolife.sys.pub;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class pubfunction {
+
     public static boolean isEmptyStr(String str) {
         if(str==null) {
             return true;
@@ -140,6 +143,11 @@ public class pubfunction {
         }
         return betweenDays;
     }
+    public static String pubDateFormat(Date inDate) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd") ;
+        return dateFormat.format(inDate);
+    }
+
     public static int countDays(int year){
         int n=0;
         for (int i = 1; i <= 12; i++) {

@@ -7,6 +7,8 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hellolife.sys.dao.User;
 import com.hellolife.sys.service.UserService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.springframework.stereotype.Controller;
@@ -127,11 +129,23 @@ public class UserController {
     public String userListTable(HttpServletRequest request,Model model) {
         JSONObject result = new JSONObject();
         JSONArray array = new JSONArray();
-        int pageNum = Integer.parseInt(request.getParameter("offset"));
+        /* bootstrap table 分页参数*/
+        int offset = Integer.parseInt(request.getParameter("offset"));
         int pageSize = Integer.parseInt(request.getParameter("limit"));
+        int pageNum = (offset/pageSize)+1;
+        String userName = request.getParameter("username");
+
+        /*jqguid 分页参数
+        int pageNum = Integer.parseInt(request.getParameter("page"));
+        int pageSize = Integer.parseInt(request.getParameter("rows"));*/
         //设置分页信息，分别是当前页数和每页显示的总记录数【记住：必须在mapper接口中的方法执行之前设置该分页信息】
-        PageHelper.startPage((pageNum/pageSize)+1, pageSize);
-        List<User> userList = userService.getAllUser();
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> userList;
+        if(pubfunction.isEmptyStr(userName)){
+            userList  = userService.getAllUser();
+        }else{
+            userList  = userService.getAllUserByName("%"+userName+"%");
+        }
         PageInfo<User> appsPageInfo = new PageInfo<>(userList);
         JSONObject jsonObject = null;
         if(userList!=null){
@@ -144,9 +158,16 @@ public class UserController {
                 array.add(jsonObject);
             }
         }
+        /* bootstrap table 返回参数*/
         result.put("rows",array);
         result.put("page",appsPageInfo.getPageNum());
         result.put("total",appsPageInfo.getTotal());
+
+        /*jqguid 返回参数
+        result.put("rows",array);
+        result.put("page",appsPageInfo.getPageNum());//当前页号
+        result.put("records",appsPageInfo.getTotal());//总条数
+        result.put("total",appsPageInfo.getPages());//页数*/
         return result.toJSONString();
     }
 }

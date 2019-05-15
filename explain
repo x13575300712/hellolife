@@ -1,0 +1,7 @@
+包说明：
+    1、druid 阿里巴巴 druid数据连接池
+    2、rzzl 融资租赁相关类
+    3、shiro 相关配置
+    4、sys 系统用户，菜单操作相关类
+    5、timeTask 定时任务
+    6、email 邮件发送类

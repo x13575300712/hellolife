@@ -2,6 +2,7 @@ package com.hellolife.rzzl.pub;
 
 import com.hellolife.rzzl.dao.CallRetInfo;
 import com.hellolife.rzzl.dao.RetInfoDetail;
+import com.hellolife.sys.pub.Calculator;
 import com.hellolife.sys.pub.SnowflakeIdWorker;
 import com.hellolife.sys.pub.pubfunction;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RzzlPub {
+    Calculator calculator = new Calculator();
     public List<RetInfoDetail>  callEveryRet(CallRetInfo callRetInfo,int useTerm,double useAmt) throws Exception{
         int terms = callTerms(callRetInfo);
         String retway = callRetInfo.getRetway();
@@ -20,7 +22,9 @@ public class RzzlPub {
                 callRetDetail(callRetInfo,callList,retway,everyRetbal);
                 break;
             case "2"://等本
-
+                String patten = callRetInfo.getPrjamt()+"/"+terms;
+                everyRetbal = calculator.calculate(patten);
+                callRetDetail(callRetInfo,callList,retway,everyRetbal);
                 break;
         }
         return callList;
@@ -43,7 +47,8 @@ public class RzzlPub {
                 }else {
                     days = pubfunction.getDays360(startDate,endDate);
                 }
-                double retInt = lvamt*days*rate/dayRateDays;
+                String patten = lvamt+"*"+days+"*"+rate+"/"+dayRateDays;
+                double retInt = calculator.calculate(patten);
                 switch(way){
                     case "1"://等额
                         double retAmt = everyRet-retInt;
@@ -104,7 +109,6 @@ public class RzzlPub {
             theLoop.setPrjId(prjId);
             theFirst.setPrjId(callRetInfo.getId());
             loopStartDate = pubfunction.newDate(loopStartDate, 0, retSpan, 0);
-            System.out.println("_____________"+endDate+"_______"+loopStartDate);
             if(pubfunction.monthSpan(endDate,loopStartDate)>=0){
                 theLoop.setEndDate(endDate);
                 theLoop.setRetDate(endDate);
@@ -140,9 +144,11 @@ public class RzzlPub {
     public double callRetbal(double prjamt, int terms, double retRate){
         double retbal = 0;
         if(1==1){//后付
-            retbal = prjamt*Math.pow((1+retRate),terms)*retRate/(Math.pow((1+retRate),terms)-1);
+            String patten = prjamt+"*"+Math.pow((1+retRate),terms)+"*"+retRate+"/("+Math.pow((1+retRate),terms)+"-"+1+")";
+            retbal = calculator.calculate(patten);
         }else{//先付
-            retbal = prjamt*Math.pow((1+retRate),terms-1)*retRate/(Math.pow((1+retRate),terms)-1);
+            String patten = prjamt+"*"+Math.pow((1+retRate),terms-1)+"*"+retRate+"/("+Math.pow((1+retRate),terms)+"-"+1+")";
+            retbal = calculator.calculate(patten);
         }
         return retbal;//
     }
@@ -151,7 +157,7 @@ public class RzzlPub {
      *
      * */
     public double callRetRate(double rate, int retspan){
-        double retrate = rate/12*retspan;
-        return retrate;
+        String patten = rate+"/12*"+retspan;
+        return calculator.calculate(patten);
     }
 }

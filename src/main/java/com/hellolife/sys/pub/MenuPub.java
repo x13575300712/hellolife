@@ -4,6 +4,9 @@ import com.hellolife.sys.dao.Menu;
 import com.hellolife.sys.service.MenuService;
 
 import java.util.*;
+/**
+ *   菜单操作类
+ */
 
 public class MenuPub {
     private MenuService menuService;
