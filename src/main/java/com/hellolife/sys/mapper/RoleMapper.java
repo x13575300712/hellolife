@@ -12,21 +12,20 @@ import java.util.List;
 
 @Repository
 public interface RoleMapper {
-	 @Select("SELECT * FROM sys_user_role a left join sysrole b on a.roleid=b.id WHERE a.userid = #{id}")
-	 List<Role> selectRole(long id);
+	@Select("SELECT * FROM sys_user_role a left join sysrole b on a.roleid=b.id WHERE a.userid = #{id}")
+	List<Role> selectRole(long id);
+	@Select("SELECT * FROM sysrole where description = #{description}")
+	List<Role> selectAllRoleByDesc(String description);
+	@Select("SELECT * FROM sysrole ")
+	List<Role> selectAllRole();
+	@Select("SELECT * FROM sysrole where id = #{id}")
+	Role getRoleByid(long id);
+	@Insert("insert into sysrole (id, role, description, useflg ) values(#{id}, #{role}, #{description}, #{useflg})")
+	int genRole(Role role);
+	@Update("update sysrole set role=#{role},description=#{description},useflg=#{useflg} where id=#{id}")
+	int updateRole(Role role);
 
 
-
-	 @Select("SELECT * FROM sysuser WHERE usercode = #{usercode}")
-	 User loginUser(String usercode);
-	 @Insert("insert into sysuser (id, username, password, email, usercode, salt, state) values(#{id}, #{userName}, #{passWord}, #{email}, #{userCode}, #{salt}, #{state})")
-	 int genUser(User user);
-	 @Update("update sysuser set username=#{userName},email=#{email},state=#{state},usercode=#{userCode} where id=#{id}")
-	 int updateUser(User user);
-	 @Select("Select * from sysuser where username like #{userName} ")
-	 List<User> getAllUserByName(String userName);
-	 @Select("Select * from sysuser ")
-	 List<User> getAllUser();
-	 @Delete("delete from sysuser where usercode = #{usercode}")
-	 int deleteUser(String usercode);
+	 @Delete("delete from sysrole where id = #{id}")
+	 int deleteRole(long id);
 }

@@ -62,7 +62,7 @@ public class LoginController {
 		}
 		//redisUtil.set(user.getUserName(), user);
 		session.setAttribute("userList", userList);
-		return "/layout";
+		return "layout";
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/content")
 	public String mainContent(HttpSession session) {
-		return "/mainpart/hello";
+		return "mainpart/hello";
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -108,6 +108,6 @@ public class LoginController {
 		model.addAttribute("showflg", true);
 		model.addAttribute("username", username);
 		model.addAttribute("password", password);
-	    return "/login";
+	    return "login";
 	}
 }

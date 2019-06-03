@@ -4,39 +4,42 @@
     <title>热爱生活</title>
     <link></link>
 </head>
-
 <body onload="bodyOnload()">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
+            <div class="box col-xs-12" style="height: 1px">
+                <div class="box-header">
+                    <h3 class="box-title">系统角色列表</h3>
+                </div>
+                <!-- /.box-header -->
                 <div class="box-body">
-                    <table id="rzzlDeTab" class="">
+                    <div class="btn-group" role="group" id="toolbar">
+                        <button type="button" onclick="addRow('/createPermission','','新增',800,630);" class="btn btn-default" >新增</button>
+                        <button type="button" onclick="editRow('#permissionTab','/createPermission','id','','修改',800,630)" class="btn btn-default" >修改</button>
+                        <button type="button" class="btn btn-default" onclick="deleteRow('#permissionTab','/deletePermission',flashPermissionTab)">删除</button>
+                    </div>
+                    <table id="permissionTab" class="">
                         <thead>
                         </thead>
-                        <tbody id="rzzlDeTabBody">
+                        <tbody id="permissionTbBody">
                         </tbody>
                     </table>
+                    <div id="jqGridPager"></div>
                 </div>
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
-        </div>
-        <!-- /.col -->
-    </div>
-    <!-- /.row -->
     <!--使用公有js-->
     <div th:replace="mainpart/htmlJs :: common_js(~{::script})">
         <script></script>
     </div>
     <script th:inline="javascript">
-        var rzzlListIndex;
         function bodyOnload(){
-            $('#rzzlDeTab').bootstrapTable({
-                url: "/table/rzzlDeTab",
-                toolbar: '',                //工具按钮用哪个容器
+            var height = parent.getHeight();
+            $('#permissionTab').bootstrapTable({
+                url: "/permissionTable",
+                toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
-                pagination: false,                   //是否显示分页（*）
+                pagination: true,                   //是否显示分页（*）
                 sortable: false,                     //是否启用排序
                 sortOrder: "asc",                   //排序方式
                 //queryParams: oTableInit.queryParams,//传递参数（*）
@@ -50,36 +53,33 @@
                 showRefresh: true,                  //是否显示刷新按钮
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,                //是否启用点击选中行
-                //height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                height: height-315,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "userCode",                     //每一行的唯一标识，一般为主键列
                 showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //是否显示详细视图
                 detailView: false,                   //是否显示父子表
                 columns: [{
                     checkbox: true
                 }, {
+                    field: 'name',
+                    title: '名称'
+                }, {
+                    field: 'resourceType',
+                    title: '资源类型'
+                }, {
+                    field: 'url',
+                    title: '资源路径'
+                }, {
+                    field: 'permission',
+                    title: '权限字符串',
+                },{
+                    field: 'useflg',
+                    title: '是否启用',
+                }, {
                     field: 'id',
                     title: '主键',
                     visible:false
-                },{
-                    field: 'startdate',
-                    title: '起息日'
-                }, {
-                    field: 'enddate',
-                    title: '结息日'
-                }, {
-                    field: 'retdate',
-                    title: '还款日'
-                }, {
-                    field: 'retbal',
-                    title: '租金'
-                },{
-                    field: 'retamt',
-                    title: '本金'
-                },{
-                    field: 'retint',
-                    title: '利息'
-                }  ],
+                }],
                 queryParams : function (params) {
                     //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                     var temp = $("#formSearch").serializeJsonObject();
@@ -87,38 +87,12 @@
                     temp["offset"] = params.offset;
                     temp['sort'] = params.sort;
                     temp['sortOrder'] = params.order ;
-                    temp['prjId'] = [[${prjId}]];
                     return temp;
                 }
             });
         }
-        function importFileRzzl(tableSelect,rowid,tilte,width,height){
-            var json =  $(tableSelect).bootstrapTable('getRowByUniqueId',rowid);
-            rzzlListIndex =layer.open({
-                type: 2,
-                title: tilte,
-                maxmin: true,
-                shadeClose: true, //点击遮罩关闭层
-                area : [width+'px' , height+'px'],
-                content: "/importFile?url=/importRzzl&callback=parent.importFlash&data="+encodeURIComponent(JSON.stringify(json))
-            });
-        }
-        function flashRzzlList(){
-            felshTable($("#rzzlTab"),1);
-        }
-        function importFlash(json){
-            if(json){
-                var result = JSON.parse(json);
-                if(result.errmsg){
-                    alert(result.errmsg);
-                }else{
-                    layer.close(rzzlListIndex);
-                    felshTable($("#rzzlTab"),1);
-                }
-            }else{
-                layer.close(rzzlListIndex);
-                felshTable($("#rzzlTab"),1);
-            }
+        function flashPermissionTab(){
+            felshTable($("#permissionTab"),1);
         }
     </script>
 </body>

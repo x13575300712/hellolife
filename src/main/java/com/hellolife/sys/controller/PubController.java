@@ -40,6 +40,6 @@ public class PubController {
             jsonObject.put(name,value);
         }
         model.addAttribute("jsonData",jsonObject.toJSONString());
-        return "/sysHtml/importFile";
+        return "sysHtml/importFile";
     }
 }

@@ -51,7 +51,7 @@ public class RzzlController {
 	 */
 	@RequestMapping(value = "/rzzl")
 	public String rzzlList(Model model) {
-		return "/rzzl/rzzlList";
+		return "rzzl/rzzlList";
 	}
 	/**
 	 *

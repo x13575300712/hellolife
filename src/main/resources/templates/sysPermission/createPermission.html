@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="mainpart/htmlHead :: common_header(~{::title},~{::link})">
+    <title>热爱生活</title>
+    <link></link>
+</head>
+<body>
+<div >
+    <form id="createPermissionForm" role="form" method="post" action="/form/createPermissionForm" onsubmit="return validateCallback(this)">
+        <div class="modal-body" th:object="${permission}">
+            <div class="form-group">
+                <label>名称</label>
+                <input type="text" class="form-control" name="name" th:value="*{name}?:''" placeholder="请输入权限名称" required>
+            </div>
+            <div class="form-group ">
+                <label>资源类型</label>
+                <select class="form-control" name="resourceType"  >
+                    <option value="menu" th:selected="*{resourceType=='menu'}">菜单</option>
+                    <option value="button" th:selected="*{resourceType=='button'}">按钮</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>资源路径</label>
+                <input type="text" class="form-control" name="url" th:value="*{url}?:''" placeholder="请输入资源路径" required>
+            </div>
+            <div class="form-group">
+                <label>权限字符串</label>
+                <input type="text" class="form-control" name="permission" th:value="*{permission}?:''" placeholder="请输入权限字符串" required>
+            </div>
+            <div class="form-group">
+                <label>父编号</label>
+                <input type="text" class="form-control" name="parentId" th:value="*{parentId}?:''" placeholder="请输入父编号" required>
+            </div>
+            <div class="form-group">
+                <label>父编号列表</label>
+                <input type="text" class="form-control" name="parentIds" th:value="*{parentIds}?:''" placeholder="请输入父编号列表" required>
+            </div>
+            <div class="form-group ">
+                <label>是否有效</label>
+                <select class="form-control" name="useflg"  >
+                    <option value="1" th:selected="*{useflg=='1'}">是</option>
+                    <option value="0" th:selected="*{useflg=='0'}">否</option>
+                </select>
+            </div>
+            <input th:value="*{id}?:''"type="hidden" name="id">
+        </div>
+        <div class="modal-footer">
+            <input th:value="${saveFlg}"type="hidden" name="saveFlg">
+            <button type="button" onclick="ajaxForm(this.form,createPermissionForm)"  class="btn btn-primary">确定</button>
+            <button type="button" onclick="layerClose()" class="btn btn-danger">取消</button>
+        </div>
+    </form>
+</div>
+</body>
+<!--使用公有js-->
+<div th:replace="mainpart/htmlJs :: common_js(~{::script})">
+    <script>
+        function createPermissionForm(json) {
+            if (!json.errmsg) {
+                layerClose();
+                parent.flashPermissionTab();
+            } else {
+                alert(json.errmsg);
+            }
+        }
+        (function() {
+            $('#createPermissionForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                name: {
+                    name: {
+                        message: '名称不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '名称不能为空'
+                            }
+                        }
+                    },
+                    resourceType:{
+                        message: '资源类型不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '资源类型不能为空'
+                            }
+                        }
+                    },
+                    permission:{
+                        message: '权限字符串不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '权限字符串不能为空'
+                            }
+                        }
+                    },
+                    url:{
+                        message: '资源路径不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '资源路径不能为空'
+                            }
+                        }
+                    },
+                    useflg:{
+                        message: '是否有效不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '是否有效不能为空'
+                            }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+</div>
+</html>

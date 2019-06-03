@@ -35,7 +35,7 @@ public class MenuController {
         MenuPub menuPub = new MenuPub();
         List<Map<Object,Object>> resultList = menuPub.getListMenu(allMenu);
         model.addAttribute("treeData",JSONArray.toJSONString(resultList));
-        return "/sysmenu/menuList";
+        return "sysmenu/menuList";
     }
     /**
      *
@@ -47,7 +47,7 @@ public class MenuController {
         Menu  pm =  menuService.getMenuById(id);
         model.addAttribute("id",request.getParameter("id"));
         model.addAttribute("name",pm.getName());
-        return "/sysmenu/menuTable";
+        return "sysmenu/menuTable";
     }
     /**
      *
@@ -107,7 +107,7 @@ public class MenuController {
         model.addAttribute("parentName",parentName);
         model.addAttribute("menu",m);
         model.addAttribute("saveFlg",saveFlg);
-        return "/sysmenu/createmenu";
+        return "sysmenu/createmenu";
     }
     /**
      *

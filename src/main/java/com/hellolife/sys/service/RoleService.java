@@ -13,8 +13,20 @@ import java.util.List;
 public class RoleService {
         @Autowired
         RoleMapper roleMapper;
-        
+        //使用用户id查找该用户所有角色
         public List<Role> selectRole(long id) {
             return roleMapper.selectRole(id);
         }
+        public List<Role> selectAllRole(String description) {
+            return roleMapper.selectAllRoleByDesc(description);
+        }
+        public List<Role> selectAllRole() {
+            return roleMapper.selectAllRole();
+        }
+        public Role getRoleByid(long id) {
+        return roleMapper.getRoleByid(id);
+    }
+        public int genRole(Role role) { return roleMapper.genRole(role); }
+        public int updateRole(Role role) { return roleMapper.updateRole(role); }
+        public int deleteRole(long id) { return roleMapper.deleteRole(id); }
 }

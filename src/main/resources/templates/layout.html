@@ -17,7 +17,7 @@
     </div>
 	<div th:replace="mainpart/alert :: alert">alert</div>
 	<!--使用公有js-->
-	<div th:replace="mainpart/htmlJS::common_js(~{::script})">
+	<div th:replace="mainpart/htmlJs :: common_js(~{::script})">
 		<script>
             $(function () {
                 addTabs({

@@ -1,20 +1,20 @@
 package com.hellolife.sys.dao;
 
 public class Permission {
-	private Integer id;// 主键.
+	private long id;// 主键.
 	private String name;// 名称.
 	private String resourceType;// 资源类型，[menu|button]
 	private String url;// 资源路径.
 	private String permission; // 权限字符串,menu例子：role:*，button例子：role:create,role:update,role:delete,role:view
 	private Long parentId; // 父编号
 	private String parentIds; // 父编号列表
-	private Boolean available;
+	private int useflg;
 
-	public Integer getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -66,11 +66,25 @@ public class Permission {
 		this.parentIds = parentIds;
 	}
 
-	public Boolean getAvailable() {
-		return available;
+	public int getUseflg() {
+		return useflg;
 	}
 
-	public void setAvailable(Boolean available) {
-		this.available = available;
+	public void setUseflg(int useflg) {
+		this.useflg = useflg;
+	}
+
+	@Override
+	public String toString() {
+		return "Permission{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", resourceType='" + resourceType + '\'' +
+				", url='" + url + '\'' +
+				", permission='" + permission + '\'' +
+				", parentId=" + parentId +
+				", parentIds='" + parentIds + '\'' +
+				", useflg=" + useflg +
+				'}';
 	}
 }

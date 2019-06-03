@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="mainpart/htmlHead :: common_header(~{::title},~{::link})">
+    <title>热爱生活</title>
+    <link></link>
+</head>
+<body>
+<div >
+    <form id="createRoleForm" role="form" method="post" action="/form/createRoleForm" onsubmit="return validateCallback(this,createRoleForm)">
+        <div class="modal-body" th:object="${role}">
+            <div class="form-group">
+                <label>角色编码</label>
+                <input type="text" class="form-control" name="role" th:value="*{role}?:''" placeholder="请输入角色编码" required>
+            </div>
+            <div class="form-group">
+                <label>描述</label>
+                <input type="text" class="form-control" name="description" th:value="*{description}?:''" placeholder="请输入描述" required>
+            </div>
+            <div class="form-group ">
+                <label>是否有效</label>
+                <select class="form-control" name="useflg"  >
+                    <option value="1" th:selected="*{useflg=='1'}">是</option>
+                    <option value="0" th:selected="*{useflg=='0'}">否</option>
+                </select>
+            </div>
+            <input th:value="*{id}?:''"type="hidden" name="id">
+        </div>
+        <div class="modal-footer">
+            <input th:value="${saveFlg}"type="hidden" name="saveFlg">
+            <button type="button" onclick="ajaxForm(this.form,createRoleForm)"  class="btn btn-primary">确定</button>
+            <button type="button" onclick="layerClose()" class="btn btn-danger">取消</button>
+        </div>
+    </form>
+</div>
+</body>
+<!--使用公有js-->
+<div th:replace="mainpart/htmlJs :: common_js(~{::script})">
+    <script>
+        function createRoleForm(json) {
+            if (!json.errmsg) {
+                layerClose();
+                parent.flashroleTab();
+            } else {
+                alert(json.errmsg);
+            }
+        }
+        (function() {
+            $('#createUserForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                role: {
+                    name: {
+                        message: '角色编码不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '角色编码不能为空'
+                            }
+                        }
+                    },
+                    description:{
+                        message: '描述不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '描述不能为空'
+                            }
+                        }
+                    },
+                    useflg:{
+                        message: '是否有效不合法',
+                        validators: {
+                            notEmpty: {
+                                message: '是否有效不能为空'
+                            }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+</div>
+</html>

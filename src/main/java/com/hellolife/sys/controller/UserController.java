@@ -44,7 +44,7 @@ public class UserController {
             model.addAttribute("user", new User());
             model.addAttribute("saveFlg", "1");
         }
-        return "/sysuser/createuser";
+        return "sysuser/createuser";
     }
     @ResponseBody
     @RequestMapping(value = "/createuserForm")
@@ -118,7 +118,7 @@ public class UserController {
      */
     @RequestMapping(value = "/user")
     public String userList(Model model) {
-        return "/sysuser/userList";
+        return "sysuser/userList";
     }
     /**
      *

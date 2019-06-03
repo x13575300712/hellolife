@@ -11,10 +11,31 @@ import java.util.List;
 
 @Service
 public class PermissionService {
-        @Autowired
-        PermissionMapper permissionMapper;
+    @Autowired
+    PermissionMapper permissionMapper;
         
-        public List<Permission> selectPermission(long id) {
-            return permissionMapper.selectPermission(id);
-        }
+    public List<Permission> selectPermission(long id) {
+        return permissionMapper.selectPermission(id);
+    }
+    public List<Permission> selectAllPermission() {
+        return permissionMapper.selectAllPermission();
+    }
+    public List<Permission> selectAllPermission(String name) {
+        return permissionMapper.selectAllPermissionByName(name);
+    }
+    public List<Permission> selectPermissionByRole(String roleId) {
+        return permissionMapper.selectPermissionByRole(roleId);
+    }
+    public Permission getPermissionByid(long id) {
+        return permissionMapper.getPermissionByid(id);
+    }
+    public int genPermission(Permission p) {
+        return permissionMapper.genPermission(p);
+    }
+    public int updatePermission(Permission p) {
+        return permissionMapper.updatePermission(p);
+    }
+    public int deletePermission(long id) {
+        return permissionMapper.deletePermission(id);
+    }
 }
