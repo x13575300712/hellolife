@@ -30,5 +30,8 @@ public interface MenuMapper {
 	@Delete("delete from sysmenu where id = #{id}")
 	int deleteMenu(long id);
 
+	@Select("SELECT * FROM sysmenu a left join sys_menu_role b on a.id=b.menuId left join sys_user_role c on b.roleId=c.roleId where c.userId= #{userId}")
+	List<Menu> getMenuByUserRole(long userId);
+
 }
 

@@ -17,10 +17,10 @@
         $('#tree').treeview({
             data: getTree(),
             onNodeSelected: function (event, data) {
-                goUrl('/menuTable', 'id=' + data['id'], "#menuContent");
+                goUrl('/menuDetailTop', 'id=' + data['id'], "#menuContent");
             }
         });
-        goUrl('/menuTable', 'id=0', "#menuContent");
+        goUrl('/menuDetailTop', 'id=0', "#menuContent");
     }
 </script>
 <body onload="bodyOnload()">
@@ -42,15 +42,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
-                <div class="box box-primary">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">菜单信息</h3>
-                    </div>
-                    <div id="menuContent" class="box-body no-padding">
-                    </div>
-                    </div>
-                </div>
+            <div class="col-md-9" id="menuContent">
             </div>
         </div>
     </section>

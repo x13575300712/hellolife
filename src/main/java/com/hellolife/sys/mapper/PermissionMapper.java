@@ -3,10 +3,7 @@ package com.hellolife.sys.mapper;
 import com.hellolife.sys.dao.Permission;
 import com.hellolife.sys.dao.Role;
 import com.hellolife.sys.dao.User;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,4 +35,10 @@ public interface PermissionMapper {
 	@Delete("delete FROM  syspermission where id = #{id}")
 	int deletePermission(long id);
 
+	@Insert("insert into sys_role_permission (permissionId, roleId) " +
+			"values(#{permissionId}, #{roleId})")
+	int genPermissionAndRole(@Param("permissionId")long permissionId,@Param("roleId")long roleId);
+
+	@Delete("delete from sys_role_permission  where permissionId=#{permissionId} and roleId=#{roleId} ")
+	int deletePermissionForRole(@Param("permissionId")long permissionId,@Param("roleId")long roleId);
 }

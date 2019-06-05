@@ -1,7 +1,7 @@
 package com.hellolife.sys.dao;
 
 public class Permission {
-	private long id;// 主键.
+	private Long id;// 主键.
 	private String name;// 名称.
 	private String resourceType;// 资源类型，[menu|button]
 	private String url;// 资源路径.
@@ -10,11 +10,11 @@ public class Permission {
 	private String parentIds; // 父编号列表
 	private int useflg;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

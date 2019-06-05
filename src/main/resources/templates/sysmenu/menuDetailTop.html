@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true" onclick="detailSelect('/editMenuRow','','#tab_1')">菜单详细信息</a></li>
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false" onclick="detailSelect('/menuTable','','#tab_2')">下级菜单</a></li>
+                <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false" onclick="detailSelect('/roleAndMenu','','#tab_3')">菜单授权用户</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
+                </div>
+                <div class="tab-pane" id="tab_2">
+                </div>
+                <div class="tab-pane" id="tab_3">
+                </div>
+            </div>
+        </div>
+    </body>
+    <script th:inline="javascript">
+        function detailSelect (url,param,idSelect){
+            if(checkTyp(idSelect)){
+                return;
+            }
+            var id = [[${id}]];
+            goUrl(url, 'id=' + id+"&"+param, idSelect);
+            $(idSelect).attr("load","ready");
+        }
+
+        function checkTyp(idSelect){//判断Tab是否已加载
+            var tab=$(idSelect);
+            //已加载
+            return tab.attr("load")==="ready";
+        }
+
+        detailSelect('/editMenuRow','','#tab_1');
+    </script>
+</html>

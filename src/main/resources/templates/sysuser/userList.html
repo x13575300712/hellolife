@@ -77,6 +77,10 @@
                 columns: [{
                     checkbox: true
                 }, {
+                    field: 'id',
+                    title: '主键',
+                    visible:false
+                }, {
                     field: 'userName',
                     title: '姓名'
                 }, {
@@ -88,6 +92,13 @@
                 }, {
                     field: 'state',
                     title: '状态'
+                },{
+                    field:'caozuo',
+                    title: '操作',
+                    width: 120,
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: roleAndUser
                 } ],
                 queryParams : function (params) {
                     //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
@@ -99,6 +110,12 @@
                     return temp;
                 }
             });
+        }
+        //操作栏的格式化
+        function roleAndUser(value, row, index) {
+            var result = "";
+            result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"addRow('/roleAndUser','&id=" +row.id+ "','角色',1000,700)\" title='关联角色'><i class='fa fa-fw fa-calendar'></i></a>";
+            return result;
         }
         function flashUserList(){
             felshTable($("#userTab"),1);

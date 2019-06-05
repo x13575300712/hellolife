@@ -10,6 +10,7 @@ import com.hellolife.sys.service.MenuService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,16 +42,18 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/home")
 	public String login(HttpSession session) {
+		Subject shiroSubject = SecurityUtils.getSubject();
+		User user = (User) shiroSubject.getPrincipal();
+		long userID = user.getId();
 		MenuPub menuPub = new MenuPub(menuService);
 		List<Menu> menulist = new ArrayList<Menu>();
 		String menuStr = "";
 		try {
-			Map<String,List<Menu>>  menuMap = menuPub.getMainMenu(0,menulist);
+			Map<String,List<Menu>>  menuMap = menuPub.getMainMenu(0,menulist,userID);
 			menuStr = menuPub.getMenu(menulist, menuMap);
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		User user = (User) SecurityUtils.getSubject().getPrincipal();
 		session.setAttribute("userName", user.getUserName());
 		session.setAttribute("menuStr", menuStr);
 		List<User> userList = (List<User>)session.getAttribute("userList");

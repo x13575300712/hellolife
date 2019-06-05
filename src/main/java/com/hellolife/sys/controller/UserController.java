@@ -152,6 +152,7 @@ public class UserController {
             for(User user : userList){
                 jsonObject = new JSONObject();
                 jsonObject.put("userName",user.getUserName());
+                jsonObject.put("id",user.getId()+"");
                 jsonObject.put("userCode",user.getUserCode());
                 jsonObject.put("email",user.getEmail());
                 jsonObject.put("state",user.getState());

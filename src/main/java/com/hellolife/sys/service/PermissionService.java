@@ -38,4 +38,10 @@ public class PermissionService {
     public int deletePermission(long id) {
         return permissionMapper.deletePermission(id);
     }
+    public int genPermissionAndRole(long permissionId,long roleId) {
+        return permissionMapper.genPermissionAndRole(permissionId,roleId);
+    }
+    public int deletePermissionForRole(long permissionId,long roleId) {
+        return permissionMapper.deletePermissionForRole(permissionId,roleId);
+    }
 }

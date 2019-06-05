@@ -39,7 +39,7 @@ public class RoleController {
      */
     @ResponseBody
     @RequestMapping(value = "/roleTable")
-    public String roleTable(HttpServletRequest request,Model model) {
+    public String roleTable(HttpServletRequest request,Model model,String type) {
         JSONObject result = new JSONObject();
         JSONArray array = new JSONArray();
         /* bootstrap table 分页参数*/
@@ -54,7 +54,22 @@ public class RoleController {
 
         PageHelper.startPage(pageNum, pageSize);
         List<Role> roleList;
-        roleList =  roleService.selectAllRole();
+            switch(type){
+                default:
+                    roleList = roleService.selectAllRole();
+                    break;
+                case "menu":
+                    String id = request.getParameter("menuId");
+                    roleList = roleService.selectMenuRole(Long.parseLong(id));
+                    break;
+                case "all":
+                    roleList = roleService.selectAllRole();
+                    break;
+                case "user":
+                    id = request.getParameter("userId");
+                    roleList = roleService.selectUserRole(Long.parseLong(id));
+                    break;
+            }
         PageInfo<Role> appsPageInfo = new PageInfo<>(roleList);
         JSONObject jsonObject = null;
         if(roleList!=null){
@@ -62,7 +77,7 @@ public class RoleController {
                 jsonObject = new JSONObject();
                 jsonObject.put("description",role.getDescription());
                 jsonObject.put("role",role.getRole());
-                jsonObject.put("id",role.getId());
+                jsonObject.put("id",role.getId()+"");
                 jsonObject.put("useFlg",role.getUseflg());
                 array.add(jsonObject);
             }
@@ -150,5 +165,126 @@ public class RoleController {
         String roleId = request.getParameter("id");
         model.addAttribute("roleId",roleId);
         return "sysRole/roleAndpermissionList";
+    }
+
+    /**
+     *
+     *  关联菜单
+     */
+    @RequestMapping(value = "/roleAndMenu")
+    public String roleAndMenu(String id ,Model model) {
+        model.addAttribute("menuId",id);
+        return "sysRole/roleAndMenuList";
+    }
+    /**
+     *
+     *  关联用户
+     */
+    @RequestMapping(value = "/roleAndUser")
+    public String roleAndUser(String id ,Model model) {
+        model.addAttribute("userId",id);
+        return "sysRole/roleAndUserList";
+    }
+    /**
+     *
+     *  角色选择   菜单处
+     */
+    @RequestMapping(value = "/roleForSelect")
+    public String roleForSelect(String menuId ,Model model) {
+        model.addAttribute("menuId",menuId);
+        return "sysRole/roleForSelect";
+    }
+    /**
+     *
+     *  角色选择  用户处
+     */
+    @RequestMapping(value = "/roleForSelectUser")
+    public String roleForSelectUser(String userId ,Model model) {
+        model.addAttribute("userId",userId);
+        return "sysRole/roleForSelectUser";
+    }
+    /**
+     *
+     *  角色选择确认
+     */
+    @ResponseBody
+    @RequestMapping(value = "/sureRole")
+    public String sureRole(HttpServletRequest request, Model model,String menuId) throws Exception{
+        String roleIds = request.getParameter("data");
+        JSONArray JsonArray =JSONArray.parseArray(roleIds);
+        Long menuIdL = Long.parseLong(menuId);
+        if(JsonArray!=null){
+            for(Object obj : JsonArray){
+                JSONObject JsonObject = JSONObject.parseObject(obj.toString());
+                Long roleId =  Long.parseLong((String)JsonObject.get("id"));
+                roleService.genMenuAndRole(roleId,menuIdL);
+            }
+        }
+        JSONObject result = new JSONObject();
+        result.put("errmsg","");
+        return result.toJSONString();
+    }
+    /**
+     *
+     *  角色选择确认 用户处
+     */
+    @ResponseBody
+    @RequestMapping(value = "/sureRoleUser")
+    public String sureRoleUser(HttpServletRequest request, Model model,String userId) throws Exception{
+        String roleIds = request.getParameter("data");
+        JSONArray JsonArray =JSONArray.parseArray(roleIds);
+        Long userIdL = Long.parseLong(userId);
+        if(JsonArray!=null){
+            for(Object obj : JsonArray){
+                JSONObject JsonObject = JSONObject.parseObject(obj.toString());
+                Long roleId =  Long.parseLong((String)JsonObject.get("id"));
+                roleService.genUserAndRole(roleId,userIdL);
+            }
+        }
+        JSONObject result = new JSONObject();
+        result.put("errmsg","");
+        return result.toJSONString();
+    }
+    /**
+     *
+     *  角色选择删除 菜单处
+     */
+    @ResponseBody
+    @RequestMapping(value = "/deleteRoleForMenu")
+    public String deleteRoleForMenu(HttpServletRequest request, Model model,String menuId) throws Exception{
+        String roleIds = request.getParameter("data");
+        JSONArray JsonArray =JSONArray.parseArray(roleIds);
+        Long menuIdL = Long.parseLong(menuId);
+        if(JsonArray!=null){
+            for(Object obj : JsonArray){
+                JSONObject JsonObject = JSONObject.parseObject(obj.toString());
+                Long id = Long.parseLong((String)JsonObject.get("id"));
+                roleService.deleteMenuAndRole(id,menuIdL);
+            }
+        }
+        JSONObject result = new JSONObject();
+        result.put("errmsg","");
+        return result.toJSONString();
+    }
+    /**
+     *
+     *  角色选择删除 用户处
+     */
+    @ResponseBody
+    @RequestMapping(value = "/deleteRoleForUser")
+    public String deleteRoleForUser(HttpServletRequest request, Model model,String userId) throws Exception{
+        String roleIds = request.getParameter("data");
+        JSONArray JsonArray =JSONArray.parseArray(roleIds);
+        Long userIdL = Long.parseLong(userId);
+        if(JsonArray!=null){
+            for(Object obj : JsonArray){
+                JSONObject JsonObject = JSONObject.parseObject(obj.toString());
+                Long id = Long.parseLong((String)JsonObject.get("id"));
+                roleService.deleteUserAndRole(id,userIdL);
+            }
+        }
+        JSONObject result = new JSONObject();
+        result.put("errmsg","");
+        return result.toJSONString();
     }
 }

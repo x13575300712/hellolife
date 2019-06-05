@@ -23,8 +23,22 @@ public class MenuPub {
      *
      * */
     public Map<String,List<Menu>> getMainMenu(long parentId, List<Menu> menulist ) {
-        Map<String,List<Menu>> menuMap = new HashMap<String,List<Menu>>();
         List<Menu> allMenu = menuService.getAllMenu();
+        Map<String,List<Menu>> menuMap = menuUtil(parentId,menulist,allMenu);
+        return menuMap;
+    }
+    /**
+     *
+     * 返回主菜单
+     *
+     * */
+    public Map<String,List<Menu>> getMainMenu(long parentId, List<Menu> menulist,long userId) {
+        List<Menu> allMenu = menuService.getMenuByUserRole(userId);
+        Map<String,List<Menu>> menuMap = menuUtil(parentId,menulist,allMenu);
+        return menuMap;
+    }
+    public Map<String,List<Menu>> menuUtil (long parentId, List<Menu> menulist,List<Menu> allMenu){
+        Map<String,List<Menu>> menuMap = new HashMap<String,List<Menu>>();
         if(allMenu!=null&&!allMenu.isEmpty()){
             for(Menu m : allMenu){
                 String paraId = m.getParentId()+"";

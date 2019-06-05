@@ -74,5 +74,17 @@ public class Menu implements Serializable {
 		this.orderNum = orderNum;
 	}
 
+	@Override
+	public String toString() {
+		return "Menu{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", url='" + url + '\'' +
+				", icno='" + icno + '\'' +
+				", attr='" + attr + '\'' +
+				", parentId=" + parentId +
+				", orderNum=" + orderNum +
+				'}';
+	}
 	
 }

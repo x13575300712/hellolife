@@ -6,20 +6,14 @@
 </head>
 <body onload="bodyOnload()">
             <div class="box col-xs-12" style="height: 1px">
-                <div class="box-header">
-                    <h3 class="box-title">系统角色列表</h3>
-                </div>
-                <!-- /.box-header -->
                 <div class="box-body">
                     <div class="btn-group" role="group" id="toolbar">
-                        <button type="button" onclick="addRow('/createRole','','新增',800,600);" class="btn btn-default" >新增</button>
-                        <button type="button" onclick="editRow('#roleTab','/createRole','id','','修改',800,600)" class="btn btn-default" >修改</button>
-                        <button type="button" class="btn btn-default" onclick="deleteRow('#roleTab','/deleteRole',flashroleTab)">删除</button>
+                        <button type="button" class="btn btn-default" onclick="permissionForS()">确认选择</button>
                     </div>
-                    <table id="roleTab" class="">
+                    <table id="roleMenuTab" class="">
                         <thead>
                         </thead>
-                        <tbody id="roleTbBody">
+                        <tbody id="roleMenuTabBody">
                         </tbody>
                     </table>
                     <div id="jqGridPager"></div>
@@ -32,9 +26,11 @@
         <script></script>
     </div>
     <script th:inline="javascript">
+        function permissionForS(){
+            excuteRow('#roleMenuTab','/sureRole?menuId='+[[${menuId}]],flashPermissionTab);
+        }
         function bodyOnload(){
-            var height = parent.getHeight();
-            $('#roleTab').bootstrapTable({
+            $('#roleMenuTab').bootstrapTable({
                 url: "/roleTable",
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -53,8 +49,8 @@
                 showRefresh: true,                  //是否显示刷新按钮
                 minimumCountColumns: 2,             //最少允许的列数
                 clickToSelect: true,                //是否启用点击选中行
-                height: height-315,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-                uniqueId: "userCode",                     //每一行的唯一标识，一般为主键列
+                height: 450,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
                 showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
                 cardView: false,                    //是否显示详细视图
                 detailView: false,                   //是否显示父子表
@@ -73,14 +69,7 @@
                     field: 'id',
                     title: '主键',
                     visible:false
-                },{
-                    field:'caozuo',
-                    title: '操作',
-                    width: 120,
-                    align: 'center',
-                    valign: 'middle',
-                    formatter: roleAndPermission
-                } ],
+                }],
                 queryParams : function (params) {
                     //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                     var temp = $("#formSearch").serializeJsonObject();
@@ -88,20 +77,14 @@
                     temp["offset"] = params.offset;
                     temp['sort'] = params.sort;
                     temp['sortOrder'] = params.order ;
-                    temp['type'] = "all";
+                    temp['type'] = "menuSelect" ;
                     return temp;
                 }
             });
         }
-        //操作栏的格式化
-        function roleAndPermission(value, row, index) {
-            var result = "";
-            result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"addRow('/roleAndUser','&id=" +row.id+ "','权限',1000,700)\" title='关联权限'><i class='fa fa-fw fa-calendar'></i></a>";
-            return result;
-        }
-
-        function flashroleTab(){
-            felshTable($("#roleTab"),1);
+        function flashPermissionTab(){
+            layerClose();
+            parent.flashroleTab();
         }
     </script>
 </body>

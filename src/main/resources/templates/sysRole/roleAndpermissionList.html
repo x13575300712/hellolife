@@ -9,8 +9,8 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="btn-group" role="group" id="toolbar">
-                        <button type="button" onclick="addRow('/createPermission','','新增',800,630);" class="btn btn-default" >选择权限</button>
-                        <button type="button" class="btn btn-default" onclick="deleteRow('#permissionTab','/deletePermission',flashPermissionTab)">删除</button>
+                        <button type="button" onclick="roleAndPermissionAdd()" class="btn btn-default" >选择权限</button>
+                        <button type="button" class="btn btn-default" onclick="roleAndPermissionDel()">删除</button>
                     </div>
                     <table id="permissionTab" class="">
                         <thead>
@@ -28,6 +28,12 @@
         <script></script>
     </div>
     <script th:inline="javascript">
+        function roleAndPermissionAdd(){
+            addRowLevel2('/permissionSelect','&roleId='+[[${roleId}]],'选择权限',800,630);
+        }
+        function roleAndPermissionDel(){
+            deleteRow('#permissionTab','/deletePermissionForRole?roleId='+[[${roleId}]],flashPermissionTab);
+        }
         function bodyOnload(){
             $('#permissionTab').bootstrapTable({
                 url: "/permissionTable",

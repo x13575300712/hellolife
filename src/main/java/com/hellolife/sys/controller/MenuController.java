@@ -41,6 +41,15 @@ public class MenuController {
      *
      *  菜单列表
      */
+    @RequestMapping(value = "/menuDetailTop")
+    public String menuDetailTop(String id,Model model) {
+        model.addAttribute("id",id);
+        return "sysmenu/menuDetailTop";
+    }
+    /**
+     *
+     *  菜单列表
+     */
     @RequestMapping(value = "/menuTable")
     public String userList(HttpServletRequest request,Model model) {
         long id = Long.parseLong(request.getParameter("id"));
@@ -69,7 +78,7 @@ public class MenuController {
         if(menuList!=null){
             for(Menu menu : menuList){
                 jsonObject = new JSONObject();
-                jsonObject.put("id",menu.getId());
+                jsonObject.put("id",menu.getId()+"");
                 jsonObject.put("name",menu.getName());
                 jsonObject.put("url",menu.getUrl());
                 jsonObject.put("icon",menu.getIcno());
@@ -105,6 +114,24 @@ public class MenuController {
         }
         model.addAttribute("parentId",parentId);
         model.addAttribute("parentName",parentName);
+        model.addAttribute("menu",m);
+        model.addAttribute("saveFlg",saveFlg);
+        return "sysmenu/createmenu";
+    }
+    /**
+     *
+     *  创建菜单
+     */
+    @RequestMapping(value = "/editMenuRow")
+    public String editMenuRow(Long id,Model model) {
+        String saveFlg = "1";
+        Menu m =  menuService.getMenuById(id);
+        Long parentId = m.getParentId();
+        if(parentId!=null) {
+            Menu pm = menuService.getMenuById(parentId);
+            model.addAttribute("parentId", parentId + "");
+            model.addAttribute("parentName", pm.getName());
+        }
         model.addAttribute("menu",m);
         model.addAttribute("saveFlg",saveFlg);
         return "sysmenu/createmenu";
@@ -153,7 +180,7 @@ public class MenuController {
         if(JsonArray!=null){
             for(Object obj : JsonArray){
                 JSONObject JsonObject = JSONObject.parseObject(obj.toString());
-                long menuId = (Long)JsonObject.get("id");
+                long menuId = Long.parseLong((String)JsonObject.get("id"));
                 menuService.deleteMenu(menuId);
             }
         }
@@ -161,4 +188,5 @@ public class MenuController {
         result.put("errmsg","");
         return result.toJSONString();
     }
+
 }

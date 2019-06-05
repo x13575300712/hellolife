@@ -22,16 +22,23 @@ import java.util.List;
 @Controller
 public class PermissionController {
     @Autowired
-    RoleService roleService ;
-    @Autowired
     PermissionService permissionService ;
     /**
      *
-     *  用户列表
+     *  权限列表
      */
     @RequestMapping(value = "/permission")
-    public String userList(Model model) {
+    public String permissionList(Model model) {
         return "sysPermission/permissionList";
+    }
+    /**
+     *
+     *  权限列表
+     */
+    @RequestMapping(value = "/permissionSelect")
+    public String permissionForSelect(Model model,String roleId) {
+        model.addAttribute("roleId",roleId);
+        return "sysPermission/permissionForSelect";
     }
     /**
      *
@@ -66,7 +73,7 @@ public class PermissionController {
         if(permissionList!=null){
             for(Permission permission : permissionList){
                 jsonObject = new JSONObject();
-                jsonObject.put("id",permission.getId());
+                jsonObject.put("id",permission.getId()+"");//Long数据boostrap-table读取时存在偏差转换为string
                 jsonObject.put("useflg",permission.getUseflg());
                 jsonObject.put("name",permission.getName());
                 jsonObject.put("parentId",permission.getParentId());
@@ -128,7 +135,7 @@ public class PermissionController {
     }
     @ResponseBody
     @RequestMapping(value = "/deletePermission")
-    public String deleteUser(HttpServletRequest request, Model model) throws Exception{
+    public String deletePermission(HttpServletRequest request, Model model) throws Exception{
         String roleIds = request.getParameter("data");
         JSONArray JsonArray =JSONArray.parseArray(roleIds);
         if(JsonArray!=null){
@@ -142,4 +149,38 @@ public class PermissionController {
         result.put("errmsg","");
         return result.toJSONString();
     }
+    @ResponseBody
+    @RequestMapping(value = "/surePermission")
+    public String surePermission(HttpServletRequest request, Model model) throws Exception{
+        String roleIds = request.getParameter("data");
+        Long roleId = Long.parseLong(request.getParameter("roleId"));
+        JSONArray JsonArray =JSONArray.parseArray(roleIds);
+        if(JsonArray!=null){
+            for(Object obj : JsonArray){
+                JSONObject JsonObject = JSONObject.parseObject(obj.toString());
+                Long permissionId =  Long.parseLong((String)JsonObject.get("id"));
+                permissionService.genPermissionAndRole(permissionId,roleId);
+            }
+        }
+        JSONObject result = new JSONObject();
+        result.put("errmsg","");
+        return result.toJSONString();
+    }
+    @ResponseBody
+    @RequestMapping(value = "/deletePermissionForRole")
+    public String deletePermissionForRole(HttpServletRequest request, Model model,Long roleId) throws Exception{
+        String roleIds = request.getParameter("data");
+        JSONArray JsonArray =JSONArray.parseArray(roleIds);
+        if(JsonArray!=null){
+            for(Object obj : JsonArray){
+                JSONObject JsonObject = JSONObject.parseObject(obj.toString());
+                Long id = Long.parseLong((String)JsonObject.get("id"));
+                permissionService.deletePermissionForRole(id,roleId);
+            }
+        }
+        JSONObject result = new JSONObject();
+        result.put("errmsg","");
+        return result.toJSONString();
+    }
+
 }
